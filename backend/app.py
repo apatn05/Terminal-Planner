@@ -38,7 +38,7 @@ def source_cards(box, a):
     cargo = CARGO.get(a["cargo"], {})
     if not a["carrier_ok"]:
         carrier_card = {"name": "carrier", "title": "Carrier record", "says": "UNTRUSTED",
-                        "detail": "Carrier system down or hacked; ignored for now",
+                        "detail": "Carrier system down or hacked. Ignored for now",
                         "age_min": carrier["age_min"], "conflict": True,
                         "trust": "nothing right now", "untrusted": True}
     else:

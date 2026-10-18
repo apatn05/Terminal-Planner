@@ -120,11 +120,11 @@ def decide(box, a, clock, free, lanes_left, port):
             reason = "Refrigeration unit has failed" if a["cooling_fix"] == "cold_storage" \
                 else "No reefer plug free"
             actions.append(act("COLD_STORE", f"Move cargo to {port['cold_store']}",
-                               f"{reason}; {cargo_label.lower()} has {left} left", "Cold store"))
+                               f"{reason}. {cargo_label} has {left} left", "Cold store"))
         else:
             actions.append(act("WAIT_COOL", "Next in line for a plug",
-                               f"Every plug and cold slot went to boxes at higher risk; "
-                               f"{cargo_label.lower()} is safe for about {left}", "Reefer tech"))
+                               f"Every plug and cold slot went to boxes at higher risk. "
+                               f"{cargo_label} is safe for about {left}", "Reefer tech"))
 
     if a["holds"] and box["location"] == "gate":
         actions.append(act("MOVE", "Move out of the gate lane to the exam staging area",
@@ -170,7 +170,7 @@ def decide(box, a, clock, free, lanes_left, port):
             actions[-1]["lane"] = lane
         elif free_h > 48:
             actions.append(act("DELAY", "Delay, can wait",
-                               f"{int(free_h)} h of free time left; lane slots go to urgent boxes", "Gate"))
+                               f"{int(free_h)} h of free time left, lane slots go to urgent boxes", "Gate"))
         else:
             actions.append(act("NEXT", "Release next hour",
                                "No lane slot left this hour", "Gate"))
@@ -298,7 +298,7 @@ def explain_box(box, a, clock):
 
     if a["holds"]:
         names = ", ".join(h["description"] for h in a["holds"])
-        story.append(f"Active hold: {names}. Release is blocked until it clears; handling is still allowed.")
+        story.append(f"Active hold: {names}. Release is blocked until it clears, but handling is still allowed.")
     else:
         story.append("No customs holds.")
 

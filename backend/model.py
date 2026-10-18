@@ -63,14 +63,21 @@ except Exception as err:
 
 AGREES_WITH = {
     "Hold for Customs": {"HOLD"},
-    "Hold; Restore Cooling & Inspect": {"HOLD", "POWER", "COLD_STORE", "WAIT_COOL"},
+    "Hold. Restore Cooling & Inspect": {"HOLD", "POWER", "COLD_STORE", "WAIT_COOL"},
     "Restore Cooling & Inspect": {"POWER", "COLD_STORE", "WAIT_COOL"},
     "Inspect Weight Discrepancy": {"REWEIGH", "WAIT_INSPECT", "SAFETY"},
     "Release via Gate": {"RELEASE", "REROUTE"},
     "Reroute to Open Gate": {"REROUTE", "RELEASE"},
     "Prioritize Gate Processing": {"RELEASE", "REROUTE"},
+    "Hold": {"HOLD"},
+    "Hold & Inspect": {"HOLD", "REWEIGH", "WAIT_INSPECT", "SAFETY"},
+    "Hold & Restore Cooling": {"HOLD", "POWER", "COLD_STORE", "WAIT_COOL"},
+    "Inspect": {"REWEIGH", "WAIT_INSPECT", "SAFETY"},
+    "Inspect & Restore Cooling": {"POWER", "COLD_STORE", "WAIT_COOL", "REWEIGH"},
+    "Release": {"RELEASE", "REROUTE"},
+    "Reroute": {"REROUTE", "RELEASE"},
 }
-RELEASES = {"Release via Gate", "Reroute to Open Gate", "Prioritize Gate Processing"}
+RELEASES = {"Release via Gate", "Reroute to Open Gate", "Prioritize Gate Processing", "Release", "Reroute"}
 
 
 def suggest(box, a, actions, clock, lanes_open):

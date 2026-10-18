@@ -1,7 +1,13 @@
+import shutil
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent / "backend"))
+ROOT = Path(__file__).resolve().parent
+sys.path.insert(0, str(ROOT / "backend"))
+
+if len(sys.argv) > 1:
+    shutil.copy(ROOT / "data" / sys.argv[1], ROOT / "data" / "container_history.csv")
+    print(f"Using data/{sys.argv[1]}")
 
 from sklearn.model_selection import cross_val_score
 from sklearn.tree import DecisionTreeClassifier, export_text

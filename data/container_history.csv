@@ -1,5 +1,5 @@
 ﻿Container Number,Shipping Company,Cargo Type,Container Type,Carrier Report,Actual Weight (kg),Customs Status,Current Temperature (°C),Required Temperature (°C),Gate Number,Gate Status,Waiting Time (hours),Risk Level,Recommended Action
-TSPU1000000,Maersk,Frozen Fish,Refrigerated,Empty,24500,Hold,-8,-18,Gate 2,Closed,12,Critical,Hold; Restore Cooling & Inspect
+TSPU1000000,Maersk,Frozen Fish,Refrigerated,Empty,24500,Hold,-8,-18,Gate 2,Closed,12,Critical,Hold. Restore Cooling & Inspect
 TSPU1000001,ONE,Toys,Dry,Loaded,27189,Cleared,,,Gate 2,Closed,16,Medium,Reroute to Open Gate
 TSPU1000002,ONE,Pharmaceuticals,Refrigerated,Loaded,14846,Hold,5,5,Gate 3,Open,15,High,Hold for Customs
 TSPU1000003,Maersk,Electronics,Dry,Loaded,9142,Hold,,,Gate 1,Open,18,High,Hold for Customs
@@ -33,7 +33,7 @@ TSPU1000030,CMA CGM,Pharmaceuticals,Refrigerated,Loaded,17061,Cleared,12,5,Gate 
 TSPU1000031,Hapag-Lloyd,Mixed Dry Goods,Dry,Loaded,11195,Cleared,,,Gate 4,Closed,13,Medium,Reroute to Open Gate
 TSPU1000032,Hapag-Lloyd,Fresh Seafood,Refrigerated,Loaded,24746,Cleared,3,2,Gate 4,Closed,2,Medium,Reroute to Open Gate
 TSPU1000033,ONE,Frozen Fish,Refrigerated,Loaded,24202,Cleared,-11,-18,Gate 1,Open,7,Critical,Restore Cooling & Inspect
-TSPU1000034,Evergreen,Pharmaceuticals,Refrigerated,Loaded,12095,Hold,12,5,Gate 2,Closed,14,Critical,Hold; Restore Cooling & Inspect
+TSPU1000034,Evergreen,Pharmaceuticals,Refrigerated,Loaded,12095,Hold,12,5,Gate 2,Closed,14,Critical,Hold. Restore Cooling & Inspect
 TSPU1000035,Hapag-Lloyd,Canned Seafood,Dry,Loaded,24347,Cleared,,,Gate 4,Closed,11,Medium,Reroute to Open Gate
 TSPU1000036,Evergreen,Fresh Seafood,Refrigerated,Loaded,24747,Cleared,4,2,Gate 3,Open,16,Medium,Prioritize Gate Processing
 TSPU1000037,Hapag-Lloyd,Toys,Dry,Loaded,10087,Hold,,,Gate 4,Closed,12,High,Hold for Customs

@@ -57,17 +57,43 @@ anything special. It just re-plans from what the terminal looks like now.
 
 ## Running it
 
+You need Python 3.10 or newer.
+
+**Mac / Linux**
+
 ```bash
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
+python train_model.py dataset1.csv
 python backend/app.py
 ```
 
-Then open http://127.0.0.1:5001. We use port 5001 because on a Mac, 5000 is
-taken by AirPlay.
+**Windows** (Command Prompt or PowerShell)
 
-Live ships are optional. Get a free key from [aisstream.io](https://aisstream.io),
-copy `.env.example` to `.env` and paste the key in. Without a key everything else
-still works.
+```bat
+py -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+python train_model.py dataset1.csv
+python backend\app.py
+```
+
+If PowerShell says running scripts is disabled when you activate, run
+`Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` once and try again. Or just
+use Command Prompt instead.
+
+Then open http://127.0.0.1:5001. We use port 5001 because on a Mac, 5000 is
+taken by AirPlay. If you see "address already in use" on any OS, something else
+has that port, so close it or restart.
+
+`train_model.py dataset1.csv` loads that dataset and trains the model on it (you can
+swap in `dataset2.csv`). It's optional, the app retrains on whatever dataset was
+loaded last every time it starts.
+
+Live ships are optional too. Get a free key from [aisstream.io](https://aisstream.io),
+copy `.env.example` to `.env` (`cp` on Mac, `copy` on Windows) and paste the key
+in. Without a key everything else still works.
 
 ## The main idea
 
@@ -89,9 +115,9 @@ still works.
 | `backend/ports.py` | The 14 ports (name, map area, customs authority, currency) |
 | `backend/scenario.py` | Builds the simulated terminal. It's seeded, so the demo is the same every run |
 | `backend/planner.py` | The decision engine: `assess()` → `score()` → `make_plan()` |
-| `backend/simulate.py` | Steps time forward an hour; compares Hold all vs First come vs Terminal Planner |
+| `backend/simulate.py` | Steps time forward an hour and compares Hold all vs First come vs Terminal Planner |
 | `backend/twists.py` | The four disruptions |
-| `backend/model.py` | Decision tree trained on `data/container_history.csv` (100 past decisions) |
+| `backend/model.py` | Decision tree trained on the loaded dataset (`data/container_history.csv`) |
 | `train_model.py` | Prints the model's accuracy and the rules it learned |
 | `backend/live_data.py` | Real data: Port of LA berths and aisstream ships, both with fallbacks |
 | `backend/app.py` | Flask server. JSON API plus the dashboard |
@@ -139,7 +165,7 @@ everywhere, so some ports show a lot more ships than others.
 ## The model
 
 It's a small scikit-learn decision tree that runs locally on a laptop. It learns
-from a dataset of 100 past container decisions using 7 inputs: reefer or dry,
+from past container decisions (100 rows in `dataset1.csv`, 120 in `dataset2.csv`) using 7 inputs: reefer or dry,
 whether the carrier says empty, weight, customs hold, how far off the temperature
 is, whether the gate is open, and hours waited. It predicts an action and a risk level.
 

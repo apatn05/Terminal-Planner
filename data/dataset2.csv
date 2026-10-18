@@ -1,0 +1,121 @@
+﻿Container Number,Shipping Company,Cargo Type,Container Type,Carrier Report,Actual Weight (kg),Customs Status,Current Temperature (°C),Required Temperature (°C),Gate Number,Gate Status,Waiting Time (hours),Risk Level,Recommended Action
+TEST2000000,ONE,Frozen Shrimp,Refrigerated,Empty,24500,Hold,-5,-18,Gate 3,Closed,20,Critical,Hold & Inspect
+TEST2000001,ONE,Gaming Consoles,Dry,Loaded,13000,Clear,,,Gate 1,Open,1,Low,Release
+TEST2000002,ONE,Cotton Dresses,Dry,Empty,21000,Clear,,,Gate 4,Open,9,High,Inspect
+TEST2000003,ONE,Vaccines,Refrigerated,Loaded,9200,Clear,16,4,Gate 2,Congested,4,Critical,Inspect & Restore Cooling
+TEST2000004,ONE,Steel Coils,Dry,Loaded,26500,Hold,,,Gate 5,Open,25,High,Hold
+TEST2000005,CMA CGM,Vaccines,Refrigerated,Loaded,15596,Clear,4,4,Gate 3,Closed,13,Medium,Reroute
+TEST2000006,Evergreen,Fresh Salmon,Refrigerated,Loaded,24250,Clear,0,0,Gate 1,Closed,13,Medium,Reroute
+TEST2000007,ZIM,Automotive Parts,Dry,Loaded,26024,Clear,,,Gate 4,Closed,24,Medium,Reroute
+TEST2000008,CMA CGM,Fresh Salmon,Refrigerated,Loaded,19205,Clear,0,0,Gate 2,Closed,25,Medium,Reroute
+TEST2000009,ONE,Fresh Salmon,Refrigerated,Loaded,18078,Clear,-1,0,Gate 1,Closed,27,Medium,Reroute
+TEST2000010,ONE,Bananas,Refrigerated,Loaded,10544,Clear,20,13,Gate 4,Congested,2,Critical,Inspect & Restore Cooling
+TEST2000011,Yang Ming,Solar Panels,Dry,Loaded,18497,Clear,,,Gate 5,Congested,9,Medium,Reroute
+TEST2000012,Hapag-Lloyd,Furniture,Dry,Empty,6509,Clear,,,Gate 5,Open,3,High,Inspect
+TEST2000013,CMA CGM,Fresh Salmon,Refrigerated,Loaded,20069,Clear,11,0,Gate 4,Closed,15,Critical,Inspect & Restore Cooling
+TEST2000014,Hapag-Lloyd,Frozen Shrimp,Refrigerated,Loaded,20994,Pending,-11,-18,Gate 1,Closed,21,Critical,Inspect & Restore Cooling
+TEST2000015,ONE,Furniture,Dry,Loaded,21637,Clear,,,Gate 4,Congested,17,Medium,Reroute
+TEST2000016,Yang Ming,Canned Fish,Dry,Loaded,14864,Clear,,,Gate 6,Open,24,Medium,Release
+TEST2000017,Hapag-Lloyd,Pharmaceuticals,Refrigerated,Loaded,19846,Hold,16,5,Gate 2,Closed,25,Critical,Hold & Restore Cooling
+TEST2000018,ONE,Frozen Shrimp,Refrigerated,Loaded,26083,Clear,-14,-18,Gate 4,Open,18,High,Inspect & Restore Cooling
+TEST2000019,Evergreen,Furniture,Dry,Empty,9049,Clear,,,Gate 4,Congested,11,High,Inspect
+TEST2000020,COSCO,Pharmaceuticals,Refrigerated,Loaded,17463,Clear,9,5,Gate 2,Closed,15,High,Inspect & Restore Cooling
+TEST2000021,COSCO,Furniture,Dry,Loaded,17044,Clear,,,Gate 3,Open,14,Low,Release
+TEST2000022,CMA CGM,Canned Fish,Dry,Loaded,8349,Hold,,,Gate 3,Closed,11,High,Hold
+TEST2000023,ZIM,Solar Panels,Dry,Empty,17495,Clear,,,Gate 4,Congested,12,High,Inspect
+TEST2000024,COSCO,Cotton Dresses,Dry,Empty,9429,Pending,,,Gate 1,Open,9,High,Inspect
+TEST2000025,Evergreen,Fresh Salmon,Refrigerated,Loaded,19629,Clear,11,0,Gate 5,Closed,2,Critical,Inspect & Restore Cooling
+TEST2000026,Yang Ming,Furniture,Dry,Loaded,24730,Hold,,,Gate 4,Closed,12,High,Hold
+TEST2000027,Hapag-Lloyd,Pharmaceuticals,Refrigerated,Empty,14335,Clear,12,5,Gate 3,Closed,7,Critical,Inspect & Restore Cooling
+TEST2000028,ONE,Bananas,Refrigerated,Loaded,20473,Pending,24,13,Gate 4,Open,25,Critical,Inspect & Restore Cooling
+TEST2000029,ZIM,Solar Panels,Dry,Empty,15421,Clear,,,Gate 6,Closed,12,High,Inspect
+TEST2000030,Yang Ming,Bananas,Refrigerated,Empty,17755,Clear,17,13,Gate 1,Closed,19,High,Inspect & Restore Cooling
+TEST2000031,ONE,Steel Coils,Dry,Empty,15092,Clear,,,Gate 4,Closed,2,High,Inspect
+TEST2000032,Evergreen,Canned Fish,Dry,Loaded,21934,Clear,,,Gate 4,Closed,0,Medium,Reroute
+TEST2000033,COSCO,Solar Panels,Dry,Loaded,16880,Hold,,,Gate 4,Open,6,High,Hold
+TEST2000034,Yang Ming,Canned Fish,Dry,Loaded,19513,Clear,,,Gate 4,Open,7,Low,Release
+TEST2000035,Evergreen,Canned Fish,Dry,Loaded,16656,Clear,,,Gate 6,Open,17,Low,Release
+TEST2000036,Yang Ming,Cotton Dresses,Dry,Loaded,20210,Clear,,,Gate 3,Closed,16,Medium,Reroute
+TEST2000037,COSCO,Steel Coils,Dry,Loaded,26004,Clear,,,Gate 4,Congested,1,Medium,Reroute
+TEST2000038,Hapag-Lloyd,Cotton Dresses,Dry,Loaded,19038,Clear,,,Gate 6,Congested,26,Medium,Reroute
+TEST2000039,ONE,Bananas,Refrigerated,Empty,17631,Hold,12,13,Gate 4,Closed,3,High,Hold & Inspect
+TEST2000040,CMA CGM,Cotton Dresses,Dry,Loaded,16183,Clear,,,Gate 2,Open,9,Low,Release
+TEST2000041,Evergreen,Canned Fish,Dry,Loaded,25921,Clear,,,Gate 1,Open,2,Low,Release
+TEST2000042,CMA CGM,Bananas,Refrigerated,Loaded,12362,Clear,13,13,Gate 5,Congested,28,Medium,Reroute
+TEST2000043,Yang Ming,Vaccines,Refrigerated,Empty,8119,Pending,8,4,Gate 1,Open,3,High,Inspect & Restore Cooling
+TEST2000044,ZIM,Pharmaceuticals,Refrigerated,Loaded,19275,Clear,12,5,Gate 3,Open,18,Critical,Inspect & Restore Cooling
+TEST2000045,ONE,Furniture,Dry,Loaded,13049,Hold,,,Gate 4,Closed,5,High,Hold
+TEST2000046,COSCO,Steel Coils,Dry,Unknown,8671,Clear,,,Gate 2,Congested,3,Medium,Reroute
+TEST2000047,Evergreen,Furniture,Dry,Empty,6101,Clear,,,Gate 1,Closed,21,High,Inspect
+TEST2000048,CMA CGM,Bananas,Refrigerated,Unknown,15248,Hold,13,13,Gate 6,Congested,25,High,Hold
+TEST2000049,Evergreen,Canned Fish,Dry,Empty,16464,Hold,,,Gate 6,Open,1,High,Hold & Inspect
+TEST2000050,CMA CGM,Furniture,Dry,Empty,15100,Clear,,,Gate 2,Closed,11,High,Inspect
+TEST2000051,COSCO,Bananas,Refrigerated,Unknown,20551,Clear,14,13,Gate 2,Closed,7,Medium,Reroute
+TEST2000052,Yang Ming,Solar Panels,Dry,Loaded,6310,Hold,,,Gate 5,Closed,2,High,Hold
+TEST2000053,ONE,Cotton Dresses,Dry,Loaded,25320,Hold,,,Gate 6,Open,1,High,Hold
+TEST2000054,Yang Ming,Bananas,Refrigerated,Loaded,12120,Clear,12,13,Gate 1,Congested,1,Medium,Reroute
+TEST2000055,Evergreen,Pharmaceuticals,Refrigerated,Empty,17620,Clear,5,5,Gate 3,Open,20,High,Inspect
+TEST2000056,COSCO,Gaming Consoles,Dry,Loaded,21669,Clear,,,Gate 5,Closed,23,Medium,Reroute
+TEST2000057,Evergreen,Canned Fish,Dry,Loaded,20455,Hold,,,Gate 1,Closed,26,High,Hold
+TEST2000058,COSCO,Gaming Consoles,Dry,Loaded,10664,Clear,,,Gate 2,Congested,27,Medium,Reroute
+TEST2000059,ONE,Steel Coils,Dry,Loaded,5760,Clear,,,Gate 5,Closed,14,Medium,Reroute
+TEST2000060,Hapag-Lloyd,Gaming Consoles,Dry,Loaded,13328,Hold,,,Gate 2,Open,5,High,Hold
+TEST2000061,ZIM,Solar Panels,Dry,Unknown,12365,Hold,,,Gate 4,Congested,27,High,Hold
+TEST2000062,CMA CGM,Automotive Parts,Dry,Loaded,13190,Hold,,,Gate 4,Congested,28,High,Hold
+TEST2000063,CMA CGM,Automotive Parts,Dry,Loaded,5905,Clear,,,Gate 5,Congested,26,Medium,Reroute
+TEST2000064,COSCO,Furniture,Dry,Loaded,6657,Hold,,,Gate 2,Congested,24,High,Hold
+TEST2000065,COSCO,Automotive Parts,Dry,Loaded,18975,Clear,,,Gate 4,Open,12,Low,Release
+TEST2000066,Yang Ming,Solar Panels,Dry,Loaded,8948,Hold,,,Gate 2,Closed,25,High,Hold
+TEST2000067,CMA CGM,Gaming Consoles,Dry,Unknown,7829,Clear,,,Gate 1,Congested,17,Medium,Reroute
+TEST2000068,ZIM,Bananas,Refrigerated,Loaded,17070,Clear,13,13,Gate 5,Closed,13,Medium,Reroute
+TEST2000069,Evergreen,Steel Coils,Dry,Loaded,21575,Clear,,,Gate 3,Open,18,Low,Release
+TEST2000070,Evergreen,Automotive Parts,Dry,Loaded,10606,Pending,,,Gate 3,Congested,10,Medium,Hold
+TEST2000071,ONE,Automotive Parts,Dry,Unknown,19578,Hold,,,Gate 1,Congested,17,High,Hold
+TEST2000072,Hapag-Lloyd,Solar Panels,Dry,Empty,7296,Hold,,,Gate 3,Closed,26,High,Hold & Inspect
+TEST2000073,Yang Ming,Fresh Salmon,Refrigerated,Loaded,21850,Clear,2,0,Gate 5,Closed,13,Medium,Reroute
+TEST2000074,CMA CGM,Cotton Dresses,Dry,Loaded,24893,Clear,,,Gate 6,Open,15,Low,Release
+TEST2000075,Hapag-Lloyd,Bananas,Refrigerated,Empty,22075,Clear,15,13,Gate 6,Congested,21,High,Inspect
+TEST2000076,ZIM,Vaccines,Refrigerated,Empty,17949,Pending,4,4,Gate 6,Congested,21,High,Inspect
+TEST2000077,ONE,Solar Panels,Dry,Loaded,24087,Hold,,,Gate 4,Closed,11,High,Hold
+TEST2000078,Evergreen,Fresh Salmon,Refrigerated,Empty,14451,Clear,0,0,Gate 4,Open,23,High,Inspect
+TEST2000079,Yang Ming,Steel Coils,Dry,Loaded,7919,Clear,,,Gate 1,Congested,17,Medium,Reroute
+TEST2000080,Hapag-Lloyd,Gaming Consoles,Dry,Loaded,6093,Hold,,,Gate 3,Open,19,High,Hold
+TEST2000081,Hapag-Lloyd,Cotton Dresses,Dry,Empty,23262,Hold,,,Gate 2,Open,21,High,Hold & Inspect
+TEST2000082,COSCO,Gaming Consoles,Dry,Loaded,14149,Hold,,,Gate 6,Closed,9,High,Hold
+TEST2000083,COSCO,Solar Panels,Dry,Loaded,12332,Clear,,,Gate 3,Closed,8,Medium,Reroute
+TEST2000084,ONE,Vaccines,Refrigerated,Loaded,11103,Clear,2,4,Gate 2,Closed,20,Medium,Reroute
+TEST2000085,ONE,Gaming Consoles,Dry,Loaded,24414,Clear,,,Gate 1,Closed,0,Medium,Reroute
+TEST2000086,Hapag-Lloyd,Cotton Dresses,Dry,Loaded,22011,Clear,,,Gate 1,Open,13,Low,Release
+TEST2000087,ONE,Canned Fish,Dry,Empty,25183,Clear,,,Gate 1,Congested,25,High,Inspect
+TEST2000088,ZIM,Automotive Parts,Dry,Loaded,15388,Pending,,,Gate 4,Congested,27,Medium,Hold
+TEST2000089,ONE,Pharmaceuticals,Refrigerated,Loaded,25489,Hold,5,5,Gate 4,Congested,27,High,Hold
+TEST2000090,ZIM,Bananas,Refrigerated,Unknown,25179,Hold,20,13,Gate 1,Congested,12,Critical,Hold & Restore Cooling
+TEST2000091,ONE,Pharmaceuticals,Refrigerated,Empty,19093,Clear,16,5,Gate 2,Open,9,Critical,Inspect & Restore Cooling
+TEST2000092,CMA CGM,Pharmaceuticals,Refrigerated,Unknown,6412,Hold,3,5,Gate 1,Congested,25,High,Hold
+TEST2000093,COSCO,Automotive Parts,Dry,Loaded,25667,Clear,,,Gate 3,Congested,18,Medium,Reroute
+TEST2000094,Hapag-Lloyd,Furniture,Dry,Empty,10238,Pending,,,Gate 1,Congested,18,High,Inspect
+TEST2000095,ZIM,Steel Coils,Dry,Loaded,13270,Clear,,,Gate 2,Open,3,Low,Release
+TEST2000096,Evergreen,Pharmaceuticals,Refrigerated,Unknown,18466,Clear,7,5,Gate 3,Congested,28,Medium,Reroute
+TEST2000097,COSCO,Solar Panels,Dry,Loaded,8194,Clear,,,Gate 6,Open,18,Low,Release
+TEST2000098,Evergreen,Solar Panels,Dry,Unknown,24470,Clear,,,Gate 2,Closed,8,Medium,Reroute
+TEST2000099,Hapag-Lloyd,Vaccines,Refrigerated,Loaded,18093,Hold,8,4,Gate 6,Closed,18,Critical,Hold & Restore Cooling
+TEST2000100,Hapag-Lloyd,Pharmaceuticals,Refrigerated,Loaded,13337,Clear,9,5,Gate 1,Congested,21,High,Inspect & Restore Cooling
+TEST2000101,CMA CGM,Pharmaceuticals,Refrigerated,Loaded,24133,Clear,16,5,Gate 5,Open,27,Critical,Inspect & Restore Cooling
+TEST2000102,ONE,Fresh Salmon,Refrigerated,Empty,26382,Clear,-1,0,Gate 3,Open,27,High,Inspect
+TEST2000103,CMA CGM,Steel Coils,Dry,Empty,13022,Clear,,,Gate 5,Open,23,High,Inspect
+TEST2000104,Hapag-Lloyd,Canned Fish,Dry,Empty,9839,Hold,,,Gate 5,Closed,28,High,Hold & Inspect
+TEST2000105,ZIM,Automotive Parts,Dry,Loaded,6862,Clear,,,Gate 4,Congested,2,Medium,Reroute
+TEST2000106,Yang Ming,Steel Coils,Dry,Loaded,24068,Clear,,,Gate 6,Congested,4,Medium,Reroute
+TEST2000107,COSCO,Frozen Shrimp,Refrigerated,Loaded,26783,Hold,-17,-18,Gate 5,Congested,17,High,Hold
+TEST2000108,COSCO,Canned Fish,Dry,Empty,25664,Clear,,,Gate 5,Closed,1,High,Inspect
+TEST2000109,Hapag-Lloyd,Frozen Shrimp,Refrigerated,Loaded,7278,Clear,-16,-18,Gate 4,Closed,11,Medium,Reroute
+TEST2000110,ZIM,Automotive Parts,Dry,Loaded,10215,Clear,,,Gate 4,Closed,3,Medium,Reroute
+TEST2000111,COSCO,Gaming Consoles,Dry,Loaded,14163,Clear,,,Gate 3,Closed,23,Medium,Reroute
+TEST2000112,Yang Ming,Frozen Shrimp,Refrigerated,Empty,26555,Clear,-20,-18,Gate 5,Congested,8,High,Inspect
+TEST2000113,Hapag-Lloyd,Pharmaceuticals,Refrigerated,Empty,25283,Clear,6,5,Gate 3,Closed,19,High,Inspect
+TEST2000114,ZIM,Solar Panels,Dry,Loaded,13915,Clear,,,Gate 5,Closed,0,Medium,Reroute
+TEST2000115,CMA CGM,Pharmaceuticals,Refrigerated,Loaded,17462,Pending,6,5,Gate 3,Closed,17,Medium,Hold
+TEST2000116,Yang Ming,Frozen Shrimp,Refrigerated,Loaded,5946,Hold,-17,-18,Gate 3,Open,21,High,Hold
+TEST2000117,CMA CGM,Cotton Dresses,Dry,Empty,16634,Clear,,,Gate 6,Congested,24,High,Inspect
+TEST2000118,Hapag-Lloyd,Furniture,Dry,Loaded,9383,Clear,,,Gate 2,Closed,12,Medium,Reroute
+TEST2000119,Yang Ming,Canned Fish,Dry,Unknown,22452,Pending,,,Gate 5,Congested,5,Medium,Hold
