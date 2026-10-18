@@ -1,12 +1,3 @@
-"""
-The ports the planner can run at. Only these labels change between ports:
-the planner engine and its hard rules are exactly the same everywhere.
-
-  box       AIS area to watch for live ships: [[south, west], [north, east]]
-  terminal  the port's main container terminal (where reefers get plugged in)
-  rate      approximate US dollars -> local currency, only used to show charges
-"""
-
 PORTS = {
     "la_lb": {"name": "Los Angeles / Long Beach", "country": "USA",
               "center": [33.735, -118.235], "zoom": 12, "box": [[33.55, -118.40], [33.80, -118.05]],

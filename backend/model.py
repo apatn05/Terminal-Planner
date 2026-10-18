@@ -1,10 +1,3 @@
-"""
-A small decision tree that learns from our team's dataset of 100 past
-container decisions (data/container_history.csv).
-
-It only *suggests*. The planner's hard rules always have the final say.
-"""
-
 import csv
 from pathlib import Path
 
@@ -12,12 +5,10 @@ from sklearn.tree import DecisionTreeClassifier
 
 DATA_FILE = Path(__file__).resolve().parent.parent / "data" / "container_history.csv"
 
-# The 7 things the model looks at, in this order.
 FEATURES = ["is_reefer", "says_empty", "weight_t", "on_hold", "temp_gap", "gate_open", "waiting_h"]
 
 
 def row_to_features(row):
-    """Turn one CSV row into numbers."""
     current = row["Current Temperature (°C)"]
     required = row["Required Temperature (°C)"]
     temp_gap = float(current) - float(required) if current and required else 0
@@ -33,7 +24,6 @@ def row_to_features(row):
 
 
 def box_to_features(box, clock, lanes_open):
-    """Turn one of our live containers into the same 7 numbers."""
     src = box["sources"]
     reefer = src.get("reefer")
     on_hold = any(h["status"] == "hold" for h in src["customs"]["holds"])
@@ -54,7 +44,6 @@ def load_rows():
 
 
 def train(rows):
-    """Two small trees: one for the action, one for the risk level."""
     X = [row_to_features(r) for r in rows]
     action_tree = DecisionTreeClassifier(max_depth=5, random_state=0)
     action_tree.fit(X, [r["Recommended Action"] for r in rows])
@@ -63,7 +52,6 @@ def train(rows):
     return action_tree, risk_tree
 
 
-# Train once when the app starts. If anything is missing, the app still runs without it.
 try:
     ROWS = load_rows()
     ACTION_TREE, RISK_TREE = train(ROWS)
@@ -73,7 +61,6 @@ except Exception as err:
     print(f"Model not loaded ({err}). The planner still works without it.")
 
 
-# Which of the planner's own actions count as "the same idea" as each model suggestion.
 AGREES_WITH = {
     "Hold for Customs": {"HOLD"},
     "Hold; Restore Cooling & Inspect": {"HOLD", "POWER", "COLD_STORE", "WAIT_COOL"},
@@ -87,7 +74,6 @@ RELEASES = {"Release via Gate", "Reroute to Open Gate", "Prioritize Gate Process
 
 
 def suggest(box, a, actions, clock, lanes_open):
-    """What the model suggests for one box, and whether the planner's rules agree."""
     if ACTION_TREE is None:
         return None
     x = [box_to_features(box, clock, lanes_open)]

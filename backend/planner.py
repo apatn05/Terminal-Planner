@@ -1,26 +1,7 @@
-"""
-The decision engine. For every box still in the terminal:
-
-  1. assess()     read every source and work out what is really going on
-  2. score()      how urgent it is (only used to decide who goes first)
-  3. make_plan()  hand out lanes, plugs, cold storage and inspection slots
-                  in that order, without ever breaking a hard rule
-
-Dual use: the same engine runs on a normal day and in a crisis. The mode only
-changes how much critical cargo (medical, relief, defense) counts in the score.
-
-Hard rules are yes/no checks. They are never traded against the score, in either mode:
-  - no release while any hold is active
-  - no release while the weight is in doubt
-  - a box that might be loaded never goes on empty-container equipment
-  - held cargo is never unloaded (so no cold storage for a held box)
-"""
-
 from ports import PORTS
 from config import (CARGO, CRITICAL, CRITICAL_POINTS, LOADED_MARGIN_KG, QUEUE_SIZE,
                     TRUCKS_PER_LANE_PER_HOUR, WEIGHT_TOLERANCE)
 
-# Which source we believe, per fact. No single source wins everything.
 TRUST = {
     "carrier": "booking and identity",
     "scale": "weight",
@@ -40,23 +21,18 @@ def fmt_hours(hours):
 
 
 def guess_cargo_from_set_point(set_point):
-    """No manifest? The reefer's setting tells us what it was prepared for."""
     return min(CARGO, key=lambda c: abs(CARGO[c]["set_point"] - set_point))
 
 
 def assess(box, untrusted=()):
-    """`untrusted` lists sources to ignore right now (e.g. a hacked carrier system)."""
     src = box["sources"]
     carrier, scale, reefer = src["carrier"], src.get("scale"), src.get("reefer")
     carrier_ok = "carrier" not in untrusted
-    # The manifest comes from the carrier, so it goes too if the carrier can't be trusted.
     cargo = box["cargo"] if carrier_ok or box.get("critical") else None
     a = {"cargo": cargo, "cargo_guessed": False, "weight_issue": None,
          "hours_left": None, "cooling_fix": None, "cooling_given": None, "damaged": False,
          "carrier_ok": carrier_ok}
 
-    # Weight. The scale is a physical reading from minutes ago; the carrier
-    # record is paperwork from days ago. For weight, the scale wins.
     if scale:
         a["net_kg"] = scale["measured_kg"] - box["tare_kg"]
         a["loaded"] = a["net_kg"] > LOADED_MARGIN_KG
@@ -68,17 +44,11 @@ def assess(box, untrusted=()):
                 if off_by > WEIGHT_TOLERANCE:
                     a["weight_issue"] = "mismatch"
     else:
-        # No scale and no trusted record: assume loaded, the safe side.
         a["loaded"] = carrier["says"] == "FULL" if carrier_ok else True
-    # Even after a reweigh confirms it, the record is still wrong until the carrier
-    # fixes it, and anyone reading that record would send an empty handler.
     a["record_wrong"] = carrier_ok and carrier["says"] == "EMPTY" and a["loaded"]
 
-    # Release. Only customs (and the other hold owners) decide this.
     a["holds"] = [h for h in src["customs"]["holds"] if h["status"] == "hold"]
 
-    # Temperature. A warming *empty* reefer doesn't matter; a loaded one does.
-    # That is why the scale reading changes how we read the reefer alarm.
     if reefer and a["loaded"]:
         if a["cargo"] is None:
             a["cargo"] = guess_cargo_from_set_point(reefer["set_point"])
@@ -86,7 +56,6 @@ def assess(box, untrusted=()):
         profile = CARGO.get(a["cargo"])
         cooling = box["location"] == "cold_storage" or (reefer["powered"] and reefer["unit_ok"])
         if profile and not cooling:
-            # A failed unit still on power warms more slowly than an unplugged box.
             rate = profile["warm_rate"] * (0.5 if reefer["powered"] else 1.0)
             a["hours_left"] = max(0.0, (profile["damage_at"] - reefer["temp_c"]) / rate)
             a["damaged"] = reefer["temp_c"] >= profile["damage_at"]
@@ -95,10 +64,8 @@ def assess(box, untrusted=()):
 
 
 def score(box, a, clock, mode="daily"):
-    """Points plus the plain-English reason for each, so the UI can show why."""
     reasons = []
     if box.get("critical"):
-        # Dual use: in a crisis, critical cargo outranks everything else.
         label = CRITICAL[box["critical"]]
         note = "crisis priority" if mode == "crisis" else "critical cargo"
         reasons.append((CRITICAL_POINTS[mode], f"{label}, {note}"))
@@ -123,7 +90,6 @@ def lane_capacity(state):
 
 
 def pick_lane(box, lanes_left):
-    """Use the booked lane if it's open, otherwise the open lane with most room."""
     if lanes_left.get(box["lane"], 0) > 0:
         lane = box["lane"]
     else:
@@ -139,11 +105,9 @@ def act(kind, text, why, who):
 
 
 def decide(box, a, clock, free, lanes_left, port):
-    """All actions for one box this hour. Uses up resources from `free` and `lanes_left`."""
     actions = []
     cargo_label = CARGO[a["cargo"]]["label"] if a["cargo"] in CARGO else a["cargo"]
 
-    # 1. Cargo that is warming comes first (plugs were handed out in assign_cooling).
     if a["cooling_fix"]:
         left = fmt_hours(a["hours_left"])
         if a["damaged"]:
@@ -162,12 +126,10 @@ def decide(box, a, clock, free, lanes_left, port):
                                f"Every plug and cold slot went to boxes at higher risk; "
                                f"{cargo_label.lower()} is safe for about {left}", "Reefer tech"))
 
-    # 2. Held boxes leave the gate lane. A hold blocks release, not handling.
     if a["holds"] and box["location"] == "gate":
         actions.append(act("MOVE", "Move out of the gate lane to the exam staging area",
                            "Frees the lane for boxes that can actually leave", "Yard ops"))
 
-    # 3. Weight in doubt: safety first, then verify.
     if a["record_wrong"]:
         actions.append(act("SAFETY", "Heavy equipment only",
                            f"Recorded as empty but the scale shows about {a['net_kg']:,} kg of cargo. "
@@ -183,7 +145,6 @@ def decide(box, a, clock, free, lanes_left, port):
             actions.append(act("WAIT_INSPECT", "Queued for reweigh",
                                "Both inspection slots are taken by more urgent boxes", "Inspection"))
 
-    # 4. Keep the hold. Congestion and charges never override it.
     if a["holds"]:
         names = ", ".join(h["description"] for h in a["holds"])
         actions.append(act("HOLD", "Keep release blocked", f"Active: {names}", "Customs broker"))
@@ -192,7 +153,6 @@ def decide(box, a, clock, free, lanes_left, port):
         actions.append(act("RECORD", "Ask the carrier to correct the empty record",
                            "Send the scale ticket to the carrier and the customs broker", "Planner"))
 
-    # 5. Everything that is clean goes out the gate, most urgent first.
     blocked = (a["holds"] or a["weight_issue"] or a["record_wrong"]
                or (a["cooling_fix"] and not a["damaged"]))
     leaving = False
@@ -215,7 +175,6 @@ def decide(box, a, clock, free, lanes_left, port):
             actions.append(act("NEXT", "Release next hour",
                                "No lane slot left this hour", "Gate"))
 
-    # A loaded reefer that stays in the terminal stays on the watch list.
     reefer = box["sources"].get("reefer")
     if reefer and a["loaded"] and not a["cooling_fix"] and not leaving:
         actions.append(act("MONITOR", "Keep on power and watch",
@@ -228,27 +187,24 @@ TIERS = {1: "P1 Critical", 2: "P2 High", 3: "P3 Standard", 4: "P4 Can wait"}
 
 
 def ticket_tier(box, a, clock, mode):
-    """The priority ticket from our slides: P1 Critical down to P4 Can wait."""
     free_h = box["lfd_h"] - clock
     if (a["hours_left"] is not None and not a["damaged"]) or (box.get("critical") and mode == "crisis"):
-        return 1      # warming reefers; critical cargo in a crisis
+        return 1
     if a["cargo"] in CARGO or a["weight_issue"] or a["record_wrong"] or box.get("critical") or free_h < 24:
-        return 2      # other perishables, data conflicts, critical cargo, free time nearly gone
+        return 2
     if free_h > 48 and not a["holds"]:
-        return 4      # cheap to hold: these get slowed
-    return 3          # general cargo
+        return 4
+    return 3
 
 
 def assign_cooling(items, free):
-    """Plugs and cold storage go strictly to whoever spoils soonest, not by total score.
-    A box with 40 minutes left beats one with an hour left, whatever its charges."""
     warming = [i for i in items if i["a"]["cooling_fix"] and not i["a"]["damaged"]]
     for item in sorted(warming, key=lambda i: i["a"]["hours_left"]):
         a = item["a"]
         if a["cooling_fix"] == "plug" and free["reefer_plugs"] > 0:
             free["reefer_plugs"] -= 1
             a["cooling_given"] = "plug"
-        elif free["cold_storage"] > 0 and not a["holds"]:   # held cargo is never unloaded
+        elif free["cold_storage"] > 0 and not a["holds"]:
             free["cold_storage"] -= 1
             a["cooling_given"] = "cold_storage"
 
@@ -257,7 +213,7 @@ def make_plan(state):
     clock = state["clock"]
     free = dict(state["free"])
     lanes_left = lane_capacity(state)
-    port = PORTS[state["port"]]     # only changes place names; the rules are the same everywhere
+    port = PORTS[state["port"]]
 
     items = []
     for box in state["boxes"]:
@@ -267,7 +223,6 @@ def make_plan(state):
         points, reasons = score(box, a, clock, state["mode"])
         items.append({"box": box, "a": a, "score": points, "reasons": reasons})
 
-    # Highest score first; ties keep queue order.
     items.sort(key=lambda item: (-item["score"], item["box"]["arrival"]))
     assign_cooling(items, free)
     for rank, item in enumerate(items, start=1):
@@ -278,7 +233,6 @@ def make_plan(state):
 
 
 def explain_problem_box(box, a):
-    """The 'what is really going on' story for the box with four stories."""
     src = box["sources"]
     scale, reefer = src["scale"], src["reefer"]
     story = []
@@ -315,7 +269,6 @@ def explain_problem_box(box, a):
 
 
 def explain_box(box, a, clock):
-    """A short plain-English summary for any box other than the problem box."""
     src = box["sources"]
     reefer = src.get("reefer")
     story = []

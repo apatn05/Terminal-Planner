@@ -1,7 +1,3 @@
-"""
-Terminal planner web server. Run:  python backend/app.py   then open http://127.0.0.1:5001
-"""
-
 import os
 from pathlib import Path
 
@@ -21,7 +17,6 @@ FRONTEND = ROOT / "frontend"
 
 
 def load_env_file():
-    """Read KEY=value lines from .env so nobody has to fight with shell exports."""
     env = ROOT / ".env"
     if env.exists():
         for line in env.read_text().splitlines():
@@ -37,7 +32,6 @@ ships = live_data.ShipFeed(os.environ.get("AISSTREAM_API_KEY", ""), state["port"
 
 
 def source_cards(box, a):
-    """The four stories, each with what it says and what we trust it for."""
     src = box["sources"]
     carrier, scale, customs, reefer = src["carrier"], src["scale"], src["customs"], src.get("reefer")
     holds = a["holds"]
@@ -69,7 +63,7 @@ def source_cards(box, a):
          "age_min": customs["age_min"], "conflict": bool(holds), "trust": planner.TRUST["customs"],
          "verdict": "Binding: cannot release" if holds else "Clear to release"},
     ]
-    if reefer:      # dry boxes have no reefer plug, so they get three cards
+    if reefer:
         cards.append(
         {"name": "reefer", "title": "Reefer plug",
          "says": f"{reefer['temp_c']:+.1f} °C",
@@ -82,7 +76,6 @@ def source_cards(box, a):
 
 
 def weight_check(box, a):
-    """Slide 10: tare + declared cargo = expected, compared with what the scale measured."""
     carrier = box["sources"]["carrier"]
     declared = carrier["declared_kg"] if a["carrier_ok"] else None
     measured = box["sources"]["scale"]["measured_kg"]
@@ -99,7 +92,6 @@ def weight_check(box, a):
 
 
 def box_ticket(box, a, item):
-    """The slide 12 priority ticket, filled in from live state. Works for any box."""
     reefer, scale = box["sources"].get("reefer"), box["sources"]["scale"]
     by_type = {x["type"]: x["text"] for x in item["actions"]}
     first = item["actions"][0]["text"] if item["actions"] else "Nothing to do this hour"
@@ -111,7 +103,6 @@ def box_ticket(box, a, item):
     else:
         need = "Dry box, no special handling"
 
-    # Where the box goes next: cooling first, then the gate, then wherever the first action says.
     gate = next((by_type[t] for t in ("RELEASE", "REROUTE", "DELAY", "NEXT") if t in by_type), None)
     if "POWER" in by_type:
         route = f"{PORTS[state['port']]['terminal']} powered reefer stack, plug in now"
@@ -145,17 +136,14 @@ def box_ticket(box, a, item):
             "weight": weight, "customs": customs, "action": action}
 
 
-# Pipeline stages in display order.
 PIPELINE = ["Unloaded", "Docs pending", "Under review", "On hold", "Cleared", "Released"]
 
 
 def container_status(box, a):
-    """Derive the container's current pipeline stage from its live fields."""
     if box["location"] == "released":
         return "Released"
     if a["holds"]:
         return "On hold"
-    # All holds have been lifted (holds list in source is non-empty but none active).
     src_holds = box["sources"]["customs"]["holds"]
     if src_holds and not a["holds"]:
         return "Cleared"
@@ -218,12 +206,10 @@ def index():
 @app.get("/api/state")
 def get_state():
     plan = planner.make_plan(state)
-    # The model's suggestion for every box, checked against what the planner decided.
     lanes_open = {lane["id"] for lane in state["lanes"] if lane["status"] == "open"}
     for item in plan:
         item["model"] = model.suggest(item["box"], item["a"], item["actions"], state["clock"], lanes_open)
     problem = next((item for item in plan if item["box"].get("problem")), None)
-    # Show the box picked in the queue, or the problem box by default.
     selected = next((item for item in plan if item["box"]["id"] == state.get("selected")), None)
     shown = selected or problem
     payload = {
@@ -258,7 +244,6 @@ def get_state():
 
 @app.post("/api/select/<box_id>")
 def select_box(box_id):
-    # Clicking a row in the queue shows that box in the top panel ("none" goes back).
     state["selected"] = box_id if any(b["id"] == box_id for b in state["boxes"]) else None
     return get_state()
 
@@ -282,7 +267,6 @@ def toggle_lane(lane_id):
 
 @app.post("/api/mode/<mode>")
 def set_mode(mode):
-    # The dual-use switch: same engine, same hard rules, different priorities.
     if mode in ("daily", "crisis") and mode != state["mode"]:
         state["mode"] = mode
         label = "Crisis mode" if mode == "crisis" else "Daily operations"
@@ -298,7 +282,6 @@ def apply_twist(name):
 
 @app.post("/api/port/<port_id>")
 def set_port(port_id):
-    # Twist 2, global expansion: same engine and rules, another port's names, map and ships.
     if port_id in PORTS and port_id != state["port"]:
         state["port"] = port_id
         ships.set_port(port_id, PORTS[port_id]["box"])
@@ -308,7 +291,7 @@ def set_port(port_id):
 
 @app.post("/api/reset")
 def reset():
-    port = state["port"]            # keep the port the user picked
+    port = state["port"]
     state.clear()
     state.update(build_scenario())
     state["port"] = port
@@ -326,7 +309,6 @@ def get_berths():
 
 
 if __name__ == "__main__":
-    # Not 5000: on macOS, AirPlay Receiver also listens there and Safari can end up talking to it.
     port = int(os.environ.get("PORT", 5001))
     ships.start()
     print(f"Terminal planner running at http://127.0.0.1:{port}")

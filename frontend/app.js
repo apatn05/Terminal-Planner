@@ -1,7 +1,3 @@
-// Terminal Planner dashboard. Everything on screen comes from the Python API;
-// this file only draws it and sends button clicks back.
-
-// Status pipeline: label → CSS modifier class.
 const STATUS_CLASS = {
   "Unloaded":   "discharged",
   "Docs pending": "docs",
@@ -11,7 +7,6 @@ const STATUS_CLASS = {
   "Released":     "released",
 };
 
-// What colour each action gets, grouped by the kind of work it is.
 const TAG_KIND = {
   POWER: "cold", COLD_STORE: "cold", WAIT_COOL: "wait", ESCALATE: "hold",
   MOVE: "move", REROUTE: "move", SAFETY: "safety",
@@ -32,7 +27,6 @@ const LOCATION = {
 let current = null;
 let filter = "all";
 
-// ---------- helpers ----------
 
 function showError(message) {
   const banner = document.getElementById("error-banner");
@@ -43,7 +37,6 @@ function showError(message) {
 async function api(path, method = "GET") {
   let res;
   try {
-    // no-store: Safari otherwise likes to reuse old responses
     res = await fetch(path, { method, cache: "no-store" });
   } catch (err) {
     showError("Can't reach the Terminal Planner server. Is `python backend/app.py` still running in the terminal?");
@@ -76,7 +69,6 @@ function fmtAge(minutes) {
   return `${Math.round(minutes / 1440)} days ago`;
 }
 
-// Charges are worked out in US dollars, then shown in the selected port's currency (approximate rate).
 const money = (n) => {
   const port = current ? current.port : { symbol: "$", rate: 1 };
   return port.symbol + Math.round(n * port.rate).toLocaleString("en-US");
@@ -84,7 +76,6 @@ const money = (n) => {
 const tag = (type) => `<span class="tag ${TAG_KIND[type] || "wait"}">${TAG_LABEL[type] || type}</span>`;
 
 function formatId(id) {
-  // ISO 6346 style: owner code, serial, boxed check digit
   return `${esc(id.slice(0, 4))} ${esc(id.slice(4, 10))}<span class="chk">${esc(id.slice(10))}</span>`;
 }
 
@@ -94,7 +85,6 @@ function setPill(id, text, kind) {
   el.className = `pill ${kind}`;
 }
 
-// ---------- render ----------
 
 function render(s) {
   current = s;
@@ -110,7 +100,6 @@ function render(s) {
   renderPort(s);
 }
 
-// Twist 2, global expansion: the port picker only changes names, map and ships.
 function renderPort(s) {
   const select = document.getElementById("port-select");
   if (!select.options.length) {
@@ -164,7 +153,6 @@ function renderProblem(p) {
   document.getElementById("pb-meta").textContent =
     `${p.size} ft ${p.kind} · ${p.carrier} · booked lane ${p.lane} · now: ${LOCATION[p.location]} · priority #${p.rank}`;
 
-  // Top-right box: spoilage countdown for warming reefers, otherwise free time.
   const countdown = document.getElementById("pb-countdown");
   if (p.hours_left !== null) {
     countdown.className = "countdown urgent";
@@ -180,7 +168,6 @@ function renderProblem(p) {
     countdown.innerHTML = `<div class="label">Free time left</div><div class="value">${fmtHours(p.free_h)}</div>`;
   }
 
-  // 6-step pipeline progress bar
   const pipeline = p.pipeline || ["Unloaded","Docs pending","Under review","On hold","Cleared","Released"];
   const activeIdx = pipeline.indexOf(p.status);
   document.getElementById("pb-pipeline").innerHTML = pipeline.map((step, i) => {
@@ -214,7 +201,6 @@ function renderProblem(p) {
     ["Weight", t.weight], ["Customs", t.customs], ["Action", t.action],
   ].map(([k, v]) => `<div class="ticket-row"><span>${k}</span><b>${esc(v)}</b></div>`).join("");
 
-  // What the model learned from our dataset suggests, next to what the planner decided.
   const modelBox = document.getElementById("pb-model");
   modelBox.hidden = !p.model;
   if (p.model) {
@@ -256,7 +242,6 @@ function renderStats(sum) {
 }
 
 function renderLanes(s) {
-  // How many boxes the plan sends through each lane this hour.
   const using = {};
   for (const row of s.queue) {
     for (const a of row.actions) if (a.lane) using[a.lane] = (using[a.lane] || 0) + 1;
@@ -365,13 +350,11 @@ function renderLog(log) {
   document.getElementById("log").innerHTML = log.map((line) => `<li>${esc(line)}</li>`).join("");
 }
 
-// ---------- map and ships ----------
 
 let map, shipLayer, berthLayer, mapPort = null;
 
 function initMap() {
   map = L.map("map", { zoomControl: true }).setView([33.735, -118.235], 12);
-  // OpenStreetMap tiles need no API key. CSS (.dark-tiles) turns them dark to match the dashboard.
   L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "&copy; OpenStreetMap contributors",
     maxZoom: 18,
@@ -385,12 +368,11 @@ function moveMap(port) {
   if (!map || port.id === mapPort) return;
   mapPort = port.id;
   map.setView(port.center, port.zoom);
-  // Berth lines are Port of LA data, so only show them there.
   if (port.id === "la_lb") berthLayer.addTo(map);
   else berthLayer.remove();
   shipLayer.clearLayers();
   document.getElementById("ships").innerHTML = '<li class="empty">Loading ships…</li>';
-  setTimeout(loadShips, 1500);     // give the AIS feed a moment to reconnect to the new area
+  setTimeout(loadShips, 1500);
 }
 
 async function loadBerths() {
@@ -445,7 +427,6 @@ async function loadShips() {
   else setPill("pill-ships", "Ships · connecting", "off");
 }
 
-// ---------- buttons ----------
 
 async function run(button, path) {
   button.disabled = true;
@@ -474,7 +455,6 @@ document.getElementById("twists").addEventListener("click", async (e) => {
   }
 });
 
-// Click a queue row to show that container in the top panel.
 document.getElementById("queue").addEventListener("click", async (e) => {
   const row = e.target.closest("tr[data-id]");
   if (!row) return;
@@ -499,13 +479,11 @@ document.getElementById("filters").addEventListener("click", (e) => {
   renderQueue();
 });
 
-// ---------- start ----------
 
 async function refresh() {
   render(await api("/api/state"));
 }
 
-// The map is a nice-to-have: if it fails, the planner still works.
 try {
   initMap();
   loadBerths();

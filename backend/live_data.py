@@ -1,13 +1,3 @@
-"""
-Real, public data from outside the terminal fence.
-
-  berths  Port of Los Angeles berth lines, data.lacity.org (public domain)
-  ships   aisstream.io live AIS over WebSocket (free key, server side only)
-
-Every fetch has a fallback, and every result says where it came from
-(live / cached / recorded / unavailable) so the UI can label it.
-"""
-
 import asyncio
 import json
 import re
@@ -22,14 +12,11 @@ DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 DATA_DIR.mkdir(exist_ok=True)
 
 
-# ---- Berths ----------------------------------------------------------------
-
 BERTHS_URL = "https://data.lacity.org/api/views/9r7y-tdse/rows.json?accessType=DOWNLOAD"
 BERTHS_CACHE = DATA_DIR / "berths.json"
 
 
 def _parse_lines(geom):
-    """Berth geometry arrives as GeoJSON or WKT text. Return [[lat, lon], ...] lines."""
     if isinstance(geom, dict):
         coords = geom.get("coordinates", [])
         if geom.get("type") == "LineString":
@@ -42,7 +29,6 @@ def _parse_lines(geom):
             lines.append([[float(p[1]), float(p[0])] for p in pairs if len(p) >= 2])
     else:
         return []
-    # Keep only real lat/lon (guards against projected coordinates sneaking in).
     return [l for l in lines if l and all(abs(lat) <= 90 and abs(lon) <= 180 for lat, lon in l)]
 
 
@@ -64,8 +50,6 @@ def get_berths():
     return {"source": "live", "berths": berths}
 
 
-# ---- Ships -----------------------------------------------------------------
-
 AIS_URL = "wss://stream.aisstream.io/v0/stream"
 NAV_STATUS = {0: "Under way", 1: "At anchor", 2: "Not under command", 3: "Restricted",
               5: "Moored", 8: "Sailing"}
@@ -84,7 +68,6 @@ def ship_type(code):
 
 
 class ShipFeed:
-    """Keeps a live picture of ships around the selected port, fed by a background thread."""
 
     def __init__(self, api_key, port_id, box):
         self.api_key = api_key
@@ -96,18 +79,16 @@ class ShipFeed:
         self._loop = self._ws = None
 
     def set_port(self, port_id, box):
-        """Watch a different port: forget the old ships and reconnect with the new area."""
         with self.lock:
             self.port_id, self.box = port_id, box
             self.ships.clear()
-            self._last_save = time.time()      # don't overwrite the new port's recording with nothing
+            self._last_save = time.time()
             if self.api_key:
                 self.status = "connecting"
         if self._loop and self._ws:
             asyncio.run_coroutine_threadsafe(self._ws.close(), self._loop)
 
     def _cache_file(self):
-        # One recording per port, so a fallback never shows the wrong harbour.
         name = "ships_recorded.json" if self.port_id == "la_lb" else f"ships_recorded_{self.port_id}.json"
         return DATA_DIR / name
 
@@ -116,12 +97,12 @@ class ShipFeed:
             threading.Thread(target=lambda: asyncio.run(self._run()), daemon=True).start()
 
     async def _run(self):
-        import websockets   # imported here so the app still runs without it installed
+        import websockets
         self._loop = asyncio.get_running_loop()
         delay = 2
         while True:
             try:
-                async with websockets.connect(AIS_URL) as ws:   # compression is on by default
+                async with websockets.connect(AIS_URL) as ws:
                     self._ws = ws
                     await ws.send(json.dumps({
                         "APIKey": self.api_key,
@@ -132,7 +113,6 @@ class ShipFeed:
                         self.status, delay = "live", 2
                         self._handle(json.loads(raw))
             except Exception as err:
-                # The stream has no uptime guarantee: back off and reconnect.
                 print(f"AIS stream: {type(err).__name__}: {err} (retrying in {delay}s)")
                 self.status = "reconnecting"
                 await asyncio.sleep(delay)
@@ -168,7 +148,7 @@ class ShipFeed:
         self._cache_file().write_text(json.dumps(recorded))
 
     def _current(self):
-        cutoff = time.time() - 30 * 60       # forget ships not heard from in 30 min
+        cutoff = time.time() - 30 * 60
         with self.lock:
             return [s for s in self.ships.values() if "lat" in s and s.get("seen", 0) > cutoff]
 
@@ -176,7 +156,6 @@ class ShipFeed:
         ships = self._current()
         if ships:
             return {"source": "live", "ships": ships}
-        # Nothing live yet: fall back to the last real recording, clearly labelled.
         if self._cache_file().exists():
             saved = json.loads(self._cache_file().read_text())
             return {"source": "recorded", "recorded_at": saved["recorded_at"],

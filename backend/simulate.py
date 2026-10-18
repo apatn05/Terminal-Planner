@@ -1,14 +1,3 @@
-"""
-Moves the terminal forward one hour at a time, and runs the same starting
-point under three strategies so we can compare them fairly:
-
-  hold_all  - the blunt move: stop the gate, touch nothing
-  fifo      - first come, first served, trusting whatever the record says
-  planner   - our planner
-
-Outcomes are judged with box["truth"], which the strategies never read.
-"""
-
 from copy import deepcopy
 
 import planner
@@ -28,7 +17,6 @@ def hourly_charge(box, clock):
 
 
 def accrued_charges(box, until):
-    """Charges from the last free day up to `until` (hours since start)."""
     end = box.get("released_at", until)
     return sum(hourly_charge(box, h) for h in range(int(box["lfd_h"]), int(end)))
 
@@ -42,7 +30,6 @@ def _free_held_resources(state, box):
 
 
 def apply_actions(state, plan):
-    """Carry out the plan's actions. `plan` is a list of {box, actions}."""
     unsafe = 0
     for item in plan:
         box = item["box"]
@@ -72,7 +59,6 @@ def apply_actions(state, plan):
 
 
 def pass_one_hour(state):
-    """Physics and paperwork for one hour. Returns boxes newly spoiled."""
     spoiled = 0
     clock = state["clock"]
     for box in state["boxes"]:
@@ -110,7 +96,6 @@ def pass_one_hour(state):
 
 
 def fifo_plan(state):
-    """First come, first served. Believes the record, so an 'empty' box gets empty handling."""
     slots = sum(planner.lane_capacity(state).values())
     plugs = state["free"]["reefer_plugs"]
     plan = []
@@ -120,8 +105,8 @@ def fifo_plan(state):
         src = box["sources"]
         holds = [h for h in src["customs"]["holds"] if h["status"] == "hold"]
         if box["location"] == "hold_area" and holds:
-            continue                      # parked until the hold clears
-        slots -= 1                        # every box at the window uses a clerk's slot
+            continue
+        slots -= 1
         says_empty = src["carrier"]["says"] == "EMPTY"
         loaded = box["truth"]["loaded"]
         reefer = src.get("reefer")
@@ -132,7 +117,6 @@ def fifo_plan(state):
                 plugs -= 1
                 actions.append({"type": "POWER"})
         else:
-            # Released without checking the weight, even if it doesn't add up.
             a = planner.assess(box)
             actions.append({"type": "RELEASE", "unsafe": int(a["weight_issue"] is not None)})
         plan.append({"box": box, "actions": actions})
@@ -159,7 +143,6 @@ def run(state, strategy, hours=SIM_HOURS):
     result["waiting"] = sum(1 for b in sim["boxes"] if b["location"] != "released")
     result["charges"] = round(result["charges"])
 
-    # Dual use: how long critical cargo waited to get out (still waiting = whole window).
     waits = [(b["released_at"] - start_clock + 1) if b["location"] == "released" else hours
              for b in sim["boxes"] if b.get("critical")]
     result["critical_wait"] = round(sum(waits) / len(waits), 1) if waits else None
@@ -171,7 +154,6 @@ def compare(state):
 
 
 def advance(state):
-    """The 'approve and run next hour' button: apply our plan for real."""
     plan = planner.make_plan(state)
     apply_actions(state, plan)
     spoiled = pass_one_hour(state)
