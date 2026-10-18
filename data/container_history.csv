@@ -1,0 +1,101 @@
+﻿Container Number,Shipping Company,Cargo Type,Container Type,Carrier Report,Actual Weight (kg),Customs Status,Current Temperature (°C),Required Temperature (°C),Gate Number,Gate Status,Waiting Time (hours),Risk Level,Recommended Action
+TSPU1000000,Maersk,Frozen Fish,Refrigerated,Empty,24500,Hold,-8,-18,Gate 2,Closed,12,Critical,Hold; Restore Cooling & Inspect
+TSPU1000001,ONE,Toys,Dry,Loaded,27189,Cleared,,,Gate 2,Closed,16,Medium,Reroute to Open Gate
+TSPU1000002,ONE,Pharmaceuticals,Refrigerated,Loaded,14846,Hold,5,5,Gate 3,Open,15,High,Hold for Customs
+TSPU1000003,Maersk,Electronics,Dry,Loaded,9142,Hold,,,Gate 1,Open,18,High,Hold for Customs
+TSPU1000004,MSC,Canned Seafood,Dry,Loaded,19594,Cleared,,,Gate 4,Closed,6,Medium,Reroute to Open Gate
+TSPU1000005,CMA CGM,Furniture,Dry,Loaded,9285,Cleared,,,Gate 4,Closed,10,Medium,Reroute to Open Gate
+TSPU1000006,Hapag-Lloyd,Fresh Seafood,Refrigerated,Loaded,14694,Cleared,2,2,Gate 3,Open,14,Low,Release via Gate
+TSPU1000007,Hapag-Lloyd,Frozen Fish,Refrigerated,Loaded,18638,Cleared,-16,-18,Gate 4,Closed,22,Medium,Reroute to Open Gate
+TSPU1000008,MSC,Fresh Seafood,Refrigerated,Empty,22705,Cleared,2,2,Gate 4,Closed,12,High,Inspect Weight Discrepancy
+TSPU1000009,Maersk,Fresh Seafood,Refrigerated,Loaded,21578,Hold,2,2,Gate 4,Closed,5,High,Hold for Customs
+TSPU1000010,Maersk,Dresses,Dry,Loaded,25283,Cleared,,,Gate 1,Open,13,Low,Release via Gate
+TSPU1000011,Maersk,Toys,Dry,Loaded,11464,Cleared,,,Gate 4,Closed,17,Medium,Reroute to Open Gate
+TSPU1000012,Evergreen,Fresh Seafood,Refrigerated,Loaded,18713,Cleared,3,2,Gate 1,Open,1,Low,Release via Gate
+TSPU1000013,CMA CGM,Fresh Seafood,Refrigerated,Empty,12260,Cleared,3,2,Gate 4,Closed,15,High,Inspect Weight Discrepancy
+TSPU1000014,Hapag-Lloyd,Dresses,Dry,Loaded,25711,Cleared,,,Gate 4,Closed,1,Medium,Reroute to Open Gate
+TSPU1000015,ONE,Machinery,Dry,Loaded,21095,Cleared,,,Gate 1,Open,1,Low,Release via Gate
+TSPU1000016,Evergreen,Machinery,Dry,Loaded,16366,Cleared,,,Gate 2,Closed,15,Medium,Reroute to Open Gate
+TSPU1000017,CMA CGM,Furniture,Dry,Loaded,4311,Hold,,,Gate 4,Closed,1,High,Hold for Customs
+TSPU1000018,Evergreen,Machinery,Dry,Loaded,22139,Cleared,,,Gate 1,Open,13,Low,Release via Gate
+TSPU1000019,ONE,Toys,Dry,Loaded,20717,Cleared,,,Gate 2,Closed,16,Medium,Reroute to Open Gate
+TSPU1000020,Hapag-Lloyd,Fresh Seafood,Refrigerated,Loaded,26073,Cleared,6,2,Gate 4,Closed,12,High,Restore Cooling & Inspect
+TSPU1000021,ONE,Machinery,Dry,Loaded,24417,Cleared,,,Gate 3,Open,17,Medium,Prioritize Gate Processing
+TSPU1000022,ONE,Machinery,Dry,Empty,26048,Cleared,,,Gate 1,Open,1,High,Inspect Weight Discrepancy
+TSPU1000023,ONE,Toys,Dry,Loaded,25205,Cleared,,,Gate 3,Open,15,Medium,Prioritize Gate Processing
+TSPU1000024,CMA CGM,Pharmaceuticals,Refrigerated,Loaded,24846,Cleared,12,5,Gate 2,Closed,7,Critical,Restore Cooling & Inspect
+TSPU1000025,MSC,Toys,Dry,Empty,12686,Cleared,,,Gate 4,Closed,11,High,Inspect Weight Discrepancy
+TSPU1000026,Hapag-Lloyd,Machinery,Dry,Empty,17606,Cleared,,,Gate 4,Closed,14,High,Inspect Weight Discrepancy
+TSPU1000027,Maersk,Pharmaceuticals,Refrigerated,Loaded,17835,Cleared,15,5,Gate 4,Closed,8,Critical,Restore Cooling & Inspect
+TSPU1000028,ONE,Canned Seafood,Dry,Loaded,17164,Cleared,,,Gate 4,Closed,21,Medium,Reroute to Open Gate
+TSPU1000029,Hapag-Lloyd,Dresses,Dry,Loaded,16614,Cleared,,,Gate 3,Open,6,Low,Release via Gate
+TSPU1000030,CMA CGM,Pharmaceuticals,Refrigerated,Loaded,17061,Cleared,12,5,Gate 3,Open,14,Critical,Restore Cooling & Inspect
+TSPU1000031,Hapag-Lloyd,Mixed Dry Goods,Dry,Loaded,11195,Cleared,,,Gate 4,Closed,13,Medium,Reroute to Open Gate
+TSPU1000032,Hapag-Lloyd,Fresh Seafood,Refrigerated,Loaded,24746,Cleared,3,2,Gate 4,Closed,2,Medium,Reroute to Open Gate
+TSPU1000033,ONE,Frozen Fish,Refrigerated,Loaded,24202,Cleared,-11,-18,Gate 1,Open,7,Critical,Restore Cooling & Inspect
+TSPU1000034,Evergreen,Pharmaceuticals,Refrigerated,Loaded,12095,Hold,12,5,Gate 2,Closed,14,Critical,Hold; Restore Cooling & Inspect
+TSPU1000035,Hapag-Lloyd,Canned Seafood,Dry,Loaded,24347,Cleared,,,Gate 4,Closed,11,Medium,Reroute to Open Gate
+TSPU1000036,Evergreen,Fresh Seafood,Refrigerated,Loaded,24747,Cleared,4,2,Gate 3,Open,16,Medium,Prioritize Gate Processing
+TSPU1000037,Hapag-Lloyd,Toys,Dry,Loaded,10087,Hold,,,Gate 4,Closed,12,High,Hold for Customs
+TSPU1000038,Maersk,Dresses,Dry,Loaded,26726,Cleared,,,Gate 1,Open,7,Low,Release via Gate
+TSPU1000039,CMA CGM,Canned Seafood,Dry,Empty,22121,Cleared,,,Gate 4,Closed,11,High,Inspect Weight Discrepancy
+TSPU1000040,ONE,Canned Seafood,Dry,Loaded,16231,Hold,,,Gate 3,Open,4,High,Hold for Customs
+TSPU1000041,Hapag-Lloyd,Fresh Seafood,Refrigerated,Empty,22762,Cleared,2,2,Gate 4,Closed,13,High,Inspect Weight Discrepancy
+TSPU1000042,MSC,Canned Seafood,Dry,Loaded,27110,Cleared,,,Gate 1,Open,1,Low,Release via Gate
+TSPU1000043,Hapag-Lloyd,Frozen Fish,Refrigerated,Loaded,9114,Cleared,-18,-18,Gate 3,Open,12,Low,Release via Gate
+TSPU1000044,MSC,Electronics,Dry,Loaded,20962,Cleared,,,Gate 3,Open,10,Low,Release via Gate
+TSPU1000045,Evergreen,Electronics,Dry,Loaded,22193,Cleared,,,Gate 3,Open,9,Low,Release via Gate
+TSPU1000046,Evergreen,Fresh Seafood,Refrigerated,Empty,27243,Cleared,2,2,Gate 1,Open,13,High,Inspect Weight Discrepancy
+TSPU1000047,ONE,Machinery,Dry,Loaded,10691,Hold,,,Gate 2,Closed,10,High,Hold for Customs
+TSPU1000048,MSC,Electronics,Dry,Loaded,21177,Cleared,,,Gate 1,Open,22,Medium,Prioritize Gate Processing
+TSPU1000049,CMA CGM,Frozen Fish,Refrigerated,Loaded,27147,Cleared,-8,-18,Gate 3,Open,12,Critical,Restore Cooling & Inspect
+TSPU1000050,Hapag-Lloyd,Electronics,Dry,Loaded,17068,Cleared,,,Gate 4,Closed,19,Medium,Reroute to Open Gate
+TSPU1000051,ONE,Dresses,Dry,Loaded,25717,Cleared,,,Gate 1,Open,7,Low,Release via Gate
+TSPU1000052,Maersk,Canned Seafood,Dry,Loaded,11683,Cleared,,,Gate 1,Open,17,Medium,Prioritize Gate Processing
+TSPU1000053,Maersk,Frozen Fish,Refrigerated,Empty,16108,Cleared,-18,-18,Gate 3,Open,2,High,Inspect Weight Discrepancy
+TSPU1000054,Hapag-Lloyd,Mixed Dry Goods,Dry,Loaded,16794,Cleared,,,Gate 2,Closed,21,Medium,Reroute to Open Gate
+TSPU1000055,Evergreen,Furniture,Dry,Loaded,10306,Cleared,,,Gate 2,Closed,13,Medium,Reroute to Open Gate
+TSPU1000056,Maersk,Mixed Dry Goods,Dry,Loaded,23955,Cleared,,,Gate 4,Closed,13,Medium,Reroute to Open Gate
+TSPU1000057,Maersk,Pharmaceuticals,Refrigerated,Loaded,18245,Cleared,5,5,Gate 2,Closed,16,Medium,Reroute to Open Gate
+TSPU1000058,ONE,Electronics,Dry,Loaded,26743,Cleared,,,Gate 4,Closed,8,Medium,Reroute to Open Gate
+TSPU1000059,CMA CGM,Frozen Fish,Refrigerated,Loaded,9163,Cleared,-18,-18,Gate 3,Open,22,Medium,Prioritize Gate Processing
+TSPU1000060,ONE,Toys,Dry,Loaded,24260,Cleared,,,Gate 2,Closed,8,Medium,Reroute to Open Gate
+TSPU1000061,Evergreen,Furniture,Dry,Loaded,11909,Cleared,,,Gate 4,Closed,7,Medium,Reroute to Open Gate
+TSPU1000062,MSC,Furniture,Dry,Loaded,12588,Cleared,,,Gate 4,Closed,19,Medium,Reroute to Open Gate
+TSPU1000063,ONE,Furniture,Dry,Loaded,10737,Hold,,,Gate 2,Closed,13,High,Hold for Customs
+TSPU1000064,Maersk,Pharmaceuticals,Refrigerated,Loaded,24997,Cleared,5,5,Gate 2,Closed,14,Medium,Reroute to Open Gate
+TSPU1000065,ONE,Dresses,Dry,Loaded,27158,Hold,,,Gate 2,Closed,12,High,Hold for Customs
+TSPU1000066,MSC,Mixed Dry Goods,Dry,Loaded,19573,Cleared,,,Gate 4,Closed,16,Medium,Reroute to Open Gate
+TSPU1000067,MSC,Toys,Dry,Loaded,13292,Cleared,,,Gate 3,Open,9,Low,Release via Gate
+TSPU1000068,Evergreen,Frozen Fish,Refrigerated,Loaded,19535,Cleared,-19,-18,Gate 3,Open,14,Low,Release via Gate
+TSPU1000069,Evergreen,Canned Seafood,Dry,Loaded,26860,Cleared,,,Gate 1,Open,4,Low,Release via Gate
+TSPU1000070,CMA CGM,Mixed Dry Goods,Dry,Loaded,25063,Cleared,,,Gate 3,Open,4,Low,Release via Gate
+TSPU1000071,CMA CGM,Machinery,Dry,Loaded,20149,Cleared,,,Gate 4,Closed,20,Medium,Reroute to Open Gate
+TSPU1000072,Evergreen,Mixed Dry Goods,Dry,Loaded,10015,Cleared,,,Gate 4,Closed,9,Medium,Reroute to Open Gate
+TSPU1000073,Evergreen,Dresses,Dry,Loaded,20669,Hold,,,Gate 2,Closed,17,High,Hold for Customs
+TSPU1000074,Evergreen,Frozen Fish,Refrigerated,Loaded,16204,Cleared,-18,-18,Gate 3,Open,20,Medium,Prioritize Gate Processing
+TSPU1000075,MSC,Mixed Dry Goods,Dry,Loaded,22914,Cleared,,,Gate 4,Closed,4,Medium,Reroute to Open Gate
+TSPU1000076,Maersk,Furniture,Dry,Loaded,6016,Cleared,,,Gate 4,Closed,15,Medium,Reroute to Open Gate
+TSPU1000077,Maersk,Toys,Dry,Loaded,18784,Cleared,,,Gate 1,Open,14,Low,Release via Gate
+TSPU1000078,Evergreen,Fresh Seafood,Refrigerated,Loaded,13006,Hold,1,2,Gate 3,Open,18,High,Hold for Customs
+TSPU1000079,Hapag-Lloyd,Canned Seafood,Dry,Loaded,16919,Cleared,,,Gate 3,Open,1,Low,Release via Gate
+TSPU1000080,ONE,Mixed Dry Goods,Dry,Loaded,21692,Cleared,,,Gate 2,Closed,14,Medium,Reroute to Open Gate
+TSPU1000081,Maersk,Machinery,Dry,Loaded,21077,Cleared,,,Gate 2,Closed,22,Medium,Reroute to Open Gate
+TSPU1000082,Hapag-Lloyd,Electronics,Dry,Loaded,13413,Hold,,,Gate 2,Closed,7,High,Hold for Customs
+TSPU1000083,Maersk,Mixed Dry Goods,Dry,Loaded,10009,Cleared,,,Gate 1,Open,5,Low,Release via Gate
+TSPU1000084,Maersk,Canned Seafood,Dry,Loaded,25511,Cleared,,,Gate 2,Closed,14,Medium,Reroute to Open Gate
+TSPU1000085,Maersk,Frozen Fish,Refrigerated,Loaded,10555,Cleared,-11,-18,Gate 3,Open,10,Critical,Restore Cooling & Inspect
+TSPU1000086,CMA CGM,Fresh Seafood,Refrigerated,Loaded,25619,Cleared,6,2,Gate 2,Closed,20,High,Restore Cooling & Inspect
+TSPU1000087,ONE,Fresh Seafood,Refrigerated,Loaded,27255,Cleared,9,2,Gate 2,Closed,16,Critical,Restore Cooling & Inspect
+TSPU1000088,Maersk,Fresh Seafood,Refrigerated,Loaded,21359,Cleared,6,2,Gate 4,Closed,2,High,Restore Cooling & Inspect
+TSPU1000089,ONE,Mixed Dry Goods,Dry,Loaded,15000,Cleared,,,Gate 1,Open,1,Low,Release via Gate
+TSPU1000090,ONE,Mixed Dry Goods,Dry,Empty,19886,Cleared,,,Gate 2,Closed,14,High,Inspect Weight Discrepancy
+TSPU1000091,ONE,Mixed Dry Goods,Dry,Loaded,25913,Cleared,,,Gate 4,Closed,17,Medium,Reroute to Open Gate
+TSPU1000092,Evergreen,Frozen Fish,Refrigerated,Loaded,24736,Cleared,-18,-18,Gate 2,Closed,4,Medium,Reroute to Open Gate
+TSPU1000093,Hapag-Lloyd,Electronics,Dry,Loaded,20460,Hold,,,Gate 4,Closed,22,High,Hold for Customs
+TSPU1000094,ONE,Canned Seafood,Dry,Loaded,11694,Cleared,,,Gate 1,Open,19,Medium,Prioritize Gate Processing
+TSPU1000095,Hapag-Lloyd,Mixed Dry Goods,Dry,Empty,14847,Cleared,,,Gate 2,Closed,6,High,Inspect Weight Discrepancy
+TSPU1000096,ONE,Pharmaceuticals,Refrigerated,Loaded,15929,Cleared,5,5,Gate 1,Open,21,Medium,Prioritize Gate Processing
+TSPU1000097,ONE,Pharmaceuticals,Refrigerated,Loaded,13967,Cleared,6,5,Gate 1,Open,2,Low,Release via Gate
+TSPU1000098,Maersk,Toys,Dry,Empty,21870,Cleared,,,Gate 3,Open,19,High,Inspect Weight Discrepancy
+TSPU1000099,Hapag-Lloyd,Fresh Seafood,Refrigerated,Loaded,23499,Hold,4,2,Gate 2,Closed,9,High,Hold for Customs

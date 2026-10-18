@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Terminal Planner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">TP</div>
+    <div>
+      <div class="brand-name">Terminal Planner</div>
+    </div>
+  </div>
+
+  <div class="clock">
+    <div class="clock-time" id="clock-time">--:--</div>
+    <div class="clock-sub" id="clock-sub">Hour 0</div>
+  </div>
+
+  <div class="controls">
+    <select class="port-select" id="port-select" aria-label="Port"></select>
+    <button class="btn primary" id="btn-next">Approve plan · run next hour</button>
+    <button class="btn ghost" id="btn-reset">Reset</button>
+  </div>
+</header>
+
+<div class="error-banner" id="error-banner" hidden></div>
+
+<div class="data-strip">
+  <span class="strip-label">Data</span>
+  <span class="pill" id="pill-ships">Ships ···</span>
+  <span class="pill" id="pill-berths">Berths ···</span>
+  <span class="pill sim">Terminal sensors · simulated</span>
+</div>
+
+<main>
+
+  <!-- Dual use: one engine, two modes -->
+  <section class="mode-bar" id="mode-bar">
+    <div class="mode-switch" id="mode-switch">
+      <button data-mode="daily">Daily operations</button>
+      <button data-mode="crisis">Crisis</button>
+    </div>
+    <div class="mode-text" id="mode-text"></div>
+  </section>
+
+  <!-- One box, four stories -->
+  <section class="panel hero">
+    <div class="hero-head">
+      <div>
+        <div class="eyebrow">One box, four stories <span class="tier-pill" id="pb-tier"></span></div>
+        <h1 class="box-id" id="pb-id">···</h1>
+        <div class="box-meta" id="pb-meta"></div>
+      </div>
+      <div class="countdown" id="pb-countdown"></div>
+    </div>
+
+    <div class="hero-body">
+      <div>
+        <div class="sources" id="pb-sources"></div>
+        <div class="verdict">
+          <h2>What is really going on</h2>
+          <ul class="story" id="pb-story"></ul>
+        </div>
+      </div>
+      <div class="verdict">
+        <h2>Priority ticket</h2>
+        <div class="ticket" id="pb-ticket"></div>
+        <h2>Planner decision</h2>
+        <div class="model-box" id="pb-model" hidden></div>
+        <ol class="steps" id="pb-actions"></ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats" id="stats"></section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Twists</h2>
+      <span class="hint">Throw a disruption at the terminal. The planner re-plans; Reset undoes all of them.</span>
+    </div>
+    <div class="twists" id="twists"></div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Gate lanes</h2>
+      <span class="hint">Click a lane to close or reopen it</span>
+    </div>
+    <div class="lanes" id="lanes"></div>
+  </section>
+
+  <div class="split">
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Priority queue</h2>
+        <div class="filters" id="filters">
+          <button data-filter="all" class="chip active">All</button>
+          <button data-filter="critical" class="chip">Critical</button>
+          <button data-filter="perishable" class="chip">Perishable</button>
+          <button data-filter="hold" class="chip">Holds</button>
+          <button data-filter="weight" class="chip">Weight</button>
+          <button data-filter="out" class="chip">Leaving now</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="queue">
+          <thead>
+            <tr><th>#</th><th>Ticket</th><th>Box</th><th>Cargo</th><th>Spoils in</th><th>Free time</th><th>Action</th><th>Why</th></tr>
+          </thead>
+          <tbody id="queue"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <aside class="side">
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Same terminal, next 8 hours</h2>
+        </div>
+        <div id="compare"></div>
+        <p class="footnote">Each strategy runs the identical simulated scenario from the current hour, with the lanes, mode and twists you see now.</p>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h2>Log</h2></div>
+        <ul class="log" id="log"><li class="muted">No hours run yet.</li></ul>
+      </section>
+    </aside>
+  </div>
+
+  <div class="split">
+    <section class="panel">
+      <div class="panel-head">
+        <h2 id="map-title">Port</h2>
+        <span class="hint" id="map-hint">Real Port of LA berth lines and live AIS ships in San Pedro Bay</span>
+      </div>
+      <div id="map"></div>
+    </section>
+    <aside class="panel side-ships">
+      <div class="panel-head">
+        <h2>Ships nearby</h2>
+        <span class="hint" id="ship-count"></span>
+      </div>
+      <ul class="ships" id="ships"></ul>
+    </aside>
+  </div>
+
+</main>
+
+<footer>
+  Real data: Port of Los Angeles berth lines, data.lacity.org · aisstream.io (live AIS ships at every port) · OpenStreetMap. Charges shown in local currency at approximate exchange rates.
+  Simulated: carrier records, scale readings, customs holds, reefer telemetry, lanes, plugs, cold storage and charges.
+</footer>
+
+<script src="vendor/leaflet/leaflet.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
