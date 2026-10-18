@@ -1,7 +1,13 @@
 # Terminal Planner
 
-Dual-use container prioritization for the terminal planner. Built for the Ports
-track (Terminal49) at the InnovateLA / USC Viterbi dual-use hackathon.
+Dual-use container prioritization for the terminal planner. Built by **Team
+Paradise** for the LA Tech Week Dual-Use Hackathon (InnovateLA / USC Viterbi),
+Ports track with Terminal49.
+
+**Team Paradise**
+- Arnav Patnekar
+- Harish Patil
+- Aditya Pranav Ernala
 
 The prompt we picked: *"When ports are disrupted, everything gets held. How do we
 keep the most urgent shipments moving?"*
