@@ -2,7 +2,7 @@
 
 Dual-use container prioritization for the terminal planner. Built by **Team
 Paradise** for the LA Tech Week Dual-Use Hackathon (InnovateLA / USC Viterbi),
-Ports track with Terminal49.
+Ports track.
 
 **Team Paradise**
 - Arnav Patnekar
