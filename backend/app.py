@@ -147,7 +147,7 @@ def container_status(box, a):
     src_holds = box["sources"]["customs"]["holds"]
     if src_holds and not a["holds"]:
         return "Cleared"
-    if box.get("inspecting") or box.get("weight_checked"):
+    if box.get("inspecting") or a["weight_issue"]:
         return "Under review"
     return "Unloaded"
 
