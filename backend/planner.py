@@ -312,3 +312,46 @@ def explain_problem_box(box, a):
     if box["location"] == "gate":
         story.append(f"Moving it out of the gate lane lets the {QUEUE_SIZE} boxes behind it keep flowing.")
     return story
+
+
+def explain_box(box, a, clock):
+    """A short plain-English summary for any box other than the problem box."""
+    src = box["sources"]
+    reefer = src.get("reefer")
+    story = []
+    if box.get("critical"):
+        story.append(f"{CRITICAL[box['critical']]} cargo: it moves to the front in a crisis.")
+
+    if not a["carrier_ok"]:
+        story.append(f"The carrier system isn't trusted right now, so we go by the scale: "
+                     f"about {a['net_kg']:,} kg of cargo.")
+    elif a["weight_issue"]:
+        story.append(f"The carrier declared {src['carrier']['declared_kg']:,} kg of cargo, but the scale "
+                     f"shows about {a['net_kg']:,} kg. It gets reweighed before anyone relies on it.")
+    else:
+        story.append(f"The weight checks out: about {a['net_kg']:,} kg of cargo, as declared.")
+
+    if reefer and a["cargo"] in CARGO:
+        profile = CARGO[a["cargo"]]
+        if a["hours_left"] is not None:
+            reason = "its refrigeration unit has failed" if not reefer["unit_ok"] else "it has no power"
+            story.append(f"It carries {profile['label'].lower()} and {reason}: {reefer['temp_c']} °C now, "
+                         f"damage at {profile['damage_at']} °C in about {fmt_hours(a['hours_left'])}.")
+        else:
+            story.append(f"It carries {profile['label'].lower()} and is cooling at {reefer['temp_c']} °C "
+                         f"(set to {reefer['set_point']} °C).")
+    elif not reefer:
+        story.append("It's a dry box, so temperature isn't a concern.")
+
+    if a["holds"]:
+        names = ", ".join(h["description"] for h in a["holds"])
+        story.append(f"Active hold: {names}. Release is blocked until it clears; handling is still allowed.")
+    else:
+        story.append("No customs holds.")
+
+    free_h = box["lfd_h"] - clock
+    if free_h <= 0:
+        story.append(f"Its free time ran out {fmt_hours(-free_h)} ago, so charges are running.")
+    else:
+        story.append(f"Free time ends in {fmt_hours(free_h)}.")
+    return story

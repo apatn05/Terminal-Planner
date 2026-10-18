@@ -365,3 +365,13 @@ footer { max-width: 1480px; margin: 0 auto; padding: 8px 24px 28px; color: var(-
 }
 .pipe-connector:has(+ .pipe-step.done),
 .pipe-connector:has(+ .pipe-step.active) { background: var(--cyan); }
+
+/* Picking a container from the queue */
+.queue tbody tr[data-id] { cursor: pointer; }
+.queue tr.selected td { background: #10202a; box-shadow: inset 0 0 0 9999px rgba(103, 232, 249, .04); }
+.queue tr.selected td:first-child { box-shadow: inset 3px 0 0 var(--cyan); }
+.back-btn {
+  margin-left: 10px; border: 1px solid var(--line-2); background: var(--panel-2); color: var(--cyan);
+  font: 500 11px var(--sans); text-transform: none; letter-spacing: 0; padding: 3px 9px; border-radius: 6px;
+}
+.back-btn[hidden] { display: none; }

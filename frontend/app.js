@@ -3,7 +3,7 @@
 
 // Status pipeline: label → CSS modifier class.
 const STATUS_CLASS = {
-  "Discharged":   "discharged",
+  "Unloaded":   "discharged",
   "Docs pending": "docs",
   "Under review": "review",
   "On hold":      "onhold",
@@ -158,21 +158,30 @@ function renderProblem(p) {
     document.getElementById("pb-id").textContent = "No problem box in the terminal";
     return;
   }
+  document.getElementById("pb-eyebrow").textContent = p.is_problem ? "One box, four stories" : "Selected container";
+  document.getElementById("pb-back").hidden = p.is_problem;
   document.getElementById("pb-id").innerHTML = formatId(p.id);
   document.getElementById("pb-meta").textContent =
-    `${p.size} ft reefer · ${p.carrier} · booked lane ${p.lane} · now: ${LOCATION[p.location]} · priority #${p.rank}`;
+    `${p.size} ft ${p.kind} · ${p.carrier} · booked lane ${p.lane} · now: ${LOCATION[p.location]} · priority #${p.rank}`;
 
+  // Top-right box: spoilage countdown for warming reefers, otherwise free time.
   const countdown = document.getElementById("pb-countdown");
   if (p.hours_left !== null) {
     countdown.className = "countdown urgent";
     countdown.innerHTML = `<div class="label">Cargo damage in</div><div class="value">${fmtHours(p.hours_left)}</div>`;
-  } else {
+  } else if (p.kind === "reefer") {
     countdown.className = "countdown safe";
     countdown.innerHTML = `<div class="label">Temperature</div><div class="value">Cooling</div>`;
+  } else if (p.free_h <= 0) {
+    countdown.className = "countdown urgent";
+    countdown.innerHTML = `<div class="label">Free time over by</div><div class="value">${fmtHours(-p.free_h)}</div>`;
+  } else {
+    countdown.className = "countdown safe";
+    countdown.innerHTML = `<div class="label">Free time left</div><div class="value">${fmtHours(p.free_h)}</div>`;
   }
 
   // 6-step pipeline progress bar
-  const pipeline = p.pipeline || ["Discharged","Docs pending","Under review","On hold","Cleared","Released"];
+  const pipeline = p.pipeline || ["Unloaded","Docs pending","Under review","On hold","Cleared","Released"];
   const activeIdx = pipeline.indexOf(p.status);
   document.getElementById("pb-pipeline").innerHTML = pipeline.map((step, i) => {
     const cls = i < activeIdx ? "done" : i === activeIdx ? "active" : "";
@@ -303,7 +312,8 @@ function renderQueue() {
 
     const statusCls = STATUS_CLASS[row.status] || "discharged";
     const why = row.reasons.length ? row.reasons.join(" · ") : main.why;
-    return `<tr class="${row.problem ? "problem" : ""}">
+    const picked = current.problem && row.id === current.problem.id;
+    return `<tr class="${row.problem ? "problem" : ""} ${picked ? "selected" : ""}" data-id="${esc(row.id)}">
       <td class="num">${row.rank}</td>
       <td><span class="tier-pill t${row.tier}">P${row.tier}</span></td>
       <td><span class="id">${esc(row.id)}</span>${flags}<div class="sub">${row.size} ft ${row.kind} · ${LOCATION[row.location]}</div></td>
@@ -462,6 +472,18 @@ document.getElementById("twists").addEventListener("click", async (e) => {
   if (twist && !twist.classList.contains("active")) {
     render(await api(`/api/twists/${twist.dataset.twist}`, "POST"));
   }
+});
+
+// Click a queue row to show that container in the top panel.
+document.getElementById("queue").addEventListener("click", async (e) => {
+  const row = e.target.closest("tr[data-id]");
+  if (!row) return;
+  render(await api(`/api/select/${row.dataset.id}`, "POST"));
+  document.querySelector(".hero").scrollIntoView({ behavior: "smooth" });
+});
+
+document.getElementById("pb-back").addEventListener("click", async () => {
+  render(await api("/api/select/none", "POST"));
 });
 
 document.getElementById("lanes").addEventListener("click", async (e) => {

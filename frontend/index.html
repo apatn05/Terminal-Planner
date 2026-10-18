@@ -55,7 +55,8 @@
   <section class="panel hero">
     <div class="hero-head">
       <div>
-        <div class="eyebrow">One box, four stories <span class="tier-pill" id="pb-tier"></span></div>
+        <div class="eyebrow"><span id="pb-eyebrow">One box, four stories</span> <span class="tier-pill" id="pb-tier"></span>
+          <button class="back-btn" id="pb-back" hidden>← Back to the problem box</button></div>
         <h1 class="box-id" id="pb-id">···</h1>
         <div class="box-meta" id="pb-meta"></div>
       </div>
@@ -103,7 +104,7 @@
   <div class="split">
     <section class="panel">
       <div class="panel-head">
-        <h2>Priority queue</h2>
+        <div><h2>Priority queue</h2><span class="hint">Click a row to see that container in full above</span></div>
         <div class="filters" id="filters">
           <button data-filter="all" class="chip active">All</button>
           <button data-filter="critical" class="chip">Critical</button>

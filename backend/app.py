@@ -39,7 +39,7 @@ ships = live_data.ShipFeed(os.environ.get("AISSTREAM_API_KEY", ""), state["port"
 def source_cards(box, a):
     """The four stories, each with what it says and what we trust it for."""
     src = box["sources"]
-    carrier, scale, customs, reefer = src["carrier"], src["scale"], src["customs"], src["reefer"]
+    carrier, scale, customs, reefer = src["carrier"], src["scale"], src["customs"], src.get("reefer")
     holds = a["holds"]
     cargo = CARGO.get(a["cargo"], {})
     if not a["carrier_ok"]:
@@ -56,7 +56,7 @@ def source_cards(box, a):
                         "conflict": a["record_wrong"], "trust": planner.TRUST["carrier"]}
     carrier_card["verdict"] = ("Ignored: system not trusted" if not a["carrier_ok"]
                                else "Paperwork, outvoted" if a["record_wrong"] else "Trusted")
-    return [
+    cards = [
         carrier_card,
         {"name": "scale", "title": "Terminal scale", "says": f"{scale['measured_kg']:,} kg",
          "detail": f"{scale['scale_id']}" + (" · confirmed by reweigh" if box.get("weight_checked") else ""),
@@ -68,14 +68,17 @@ def source_cards(box, a):
          "detail": ", ".join(h["description"] for h in holds) or "No active holds",
          "age_min": customs["age_min"], "conflict": bool(holds), "trust": planner.TRUST["customs"],
          "verdict": "Binding: cannot release" if holds else "Clear to release"},
+    ]
+    if reefer:      # dry boxes have no reefer plug, so they get three cards
+        cards.append(
         {"name": "reefer", "title": "Reefer plug",
          "says": f"{reefer['temp_c']:+.1f} °C",
          "detail": f"Set to {reefer['set_point']} °C · "
                    + ("cooling" if reefer["powered"] and reefer["unit_ok"] else "no power, warming"),
          "age_min": reefer["age_min"], "conflict": a["hours_left"] is not None,
          "damage_at": cargo.get("damage_at"), "trust": planner.TRUST["reefer"],
-         "verdict": "Trusted: cargo is perishable" if a["loaded"] else "Trusted"},
-    ]
+         "verdict": "Trusted: cargo is perishable" if a["loaded"] else "Trusted"})
+    return cards
 
 
 def weight_check(box, a):
@@ -95,33 +98,55 @@ def weight_check(box, a):
                       else f"Outside ±{int(WEIGHT_TOLERANCE * 100)}%: flag"}
 
 
-def problem_ticket(box, a, item):
-    """The slide 12 priority ticket, filled in from live state."""
-    reefer, scale = box["sources"]["reefer"], box["sources"]["scale"]
-    actions = {x["type"] for x in item["actions"]}
-    if "POWER" in actions:
+def box_ticket(box, a, item):
+    """The slide 12 priority ticket, filled in from live state. Works for any box."""
+    reefer, scale = box["sources"].get("reefer"), box["sources"]["scale"]
+    by_type = {x["type"]: x["text"] for x in item["actions"]}
+    first = item["actions"][0]["text"] if item["actions"] else "Nothing to do this hour"
+
+    if reefer:
+        need = f"Reefer, setpoint {reefer['set_point']} °C"
+    elif box.get("critical"):
+        need = f"Dry box · {CRITICAL[box['critical']]}"
+    else:
+        need = "Dry box, no special handling"
+
+    # Where the box goes next: cooling first, then the gate, then wherever the first action says.
+    gate = next((by_type[t] for t in ("RELEASE", "REROUTE", "DELAY", "NEXT") if t in by_type), None)
+    if "POWER" in by_type:
         route = f"{PORTS[state['port']]['terminal']} powered reefer stack, plug in now"
-    elif reefer["powered"] and reefer["unit_ok"]:
+    elif "COLD_STORE" in by_type:
+        route = by_type["COLD_STORE"]
+    elif "WAIT_COOL" in by_type:
+        route = "Waiting for the next free plug"
+    elif gate:
+        route = gate
+    elif reefer and reefer["powered"] and reefer["unit_ok"]:
         route = "On a powered reefer plug, cooling"
     else:
-        route = "Waiting for the next free plug"
+        route = first
+
+    tonnes = scale["measured_kg"] / 1000
     if a["record_wrong"]:
-        weight = f"Declared empty, scale reads {scale['measured_kg'] / 1000:.1f} t: mismatch flagged"
+        weight = f"Declared empty, scale reads {tonnes:.1f} t: mismatch flagged"
+    elif a["weight_issue"]:
+        weight = f"Declared {box['sources']['carrier']['declared_kg'] / 1000:.1f} t of cargo, scale reads {tonnes:.1f} t: mismatch flagged"
     else:
-        weight = f"Scale reads {scale['measured_kg'] / 1000:.1f} t"
+        weight = f"Scale reads {tonnes:.1f} t: checks out"
+
     holds = ", ".join(h["description"] for h in a["holds"])
-    return {
-        "tier": planner.TIERS[item["tier"]],
-        "need": f"Reefer, setpoint {reefer['set_point']} °C",
-        "route": route,
-        "weight": weight,
-        "customs": f"Hold ({holds}), exam first in queue" if holds else "Cleared",
-        "action": "Inspect fast. Do not release." if a["holds"] else "Release when weight and cooling check out.",
-    }
+    if holds:
+        customs = f"Hold ({holds})" + (", exam first in queue" if item["tier"] == 1 else "")
+        action = ("Inspect fast. " if a["weight_issue"] or a["record_wrong"] else "") + "Do not release."
+    else:
+        customs = "Cleared"
+        action = first
+    return {"tier": planner.TIERS[item["tier"]], "need": need, "route": route,
+            "weight": weight, "customs": customs, "action": action}
 
 
 # Pipeline stages in display order.
-PIPELINE = ["Discharged", "Docs pending", "Under review", "On hold", "Cleared", "Released"]
+PIPELINE = ["Unloaded", "Docs pending", "Under review", "On hold", "Cleared", "Released"]
 
 
 def container_status(box, a):
@@ -136,7 +161,7 @@ def container_status(box, a):
         return "Cleared"
     if box.get("inspecting") or box.get("weight_checked"):
         return "Under review"
-    return "Discharged"
+    return "Unloaded"
 
 
 def queue_row(item, clock):
@@ -198,6 +223,9 @@ def get_state():
     for item in plan:
         item["model"] = model.suggest(item["box"], item["a"], item["actions"], state["clock"], lanes_open)
     problem = next((item for item in plan if item["box"].get("problem")), None)
+    # Show the box picked in the queue, or the problem box by default.
+    selected = next((item for item in plan if item["box"]["id"] == state.get("selected")), None)
+    shown = selected or problem
     payload = {
         "clock": state["clock"], "started_at": state["started_at"],
         "mode": state["mode"], "twists": twists.listing(state),
@@ -209,21 +237,30 @@ def get_state():
         "comparison": simulate.compare(state),
         "model_rows": len(model.ROWS),
     }
-    if problem:
-        box, a = problem["box"], problem["a"]
+    if shown:
+        box, a = shown["box"], shown["a"]
         payload["problem"] = {
             "id": box["id"], "carrier": box["carrier"], "lane": box["lane"],
-            "location": box["location"], "size": box["size"], "rank": problem["rank"],
-            "hours_left": a["hours_left"],
+            "location": box["location"], "size": box["size"], "kind": box["kind"],
+            "rank": shown["rank"], "is_problem": box.get("problem", False),
+            "hours_left": a["hours_left"], "free_h": box["lfd_h"] - state["clock"],
             "sources": source_cards(box, a),
-            "story": planner.explain_problem_box(box, a),
-            "actions": problem["actions"],
-            "ticket": problem_ticket(box, a, problem),
-            "model": problem["model"],
+            "story": planner.explain_problem_box(box, a) if box.get("problem")
+                     else planner.explain_box(box, a, state["clock"]),
+            "actions": shown["actions"],
+            "ticket": box_ticket(box, a, shown),
+            "model": shown["model"],
             "status": container_status(box, a),
             "pipeline": PIPELINE,
         }
     return jsonify(payload)
+
+
+@app.post("/api/select/<box_id>")
+def select_box(box_id):
+    # Clicking a row in the queue shows that box in the top panel ("none" goes back).
+    state["selected"] = box_id if any(b["id"] == box_id for b in state["boxes"]) else None
+    return get_state()
 
 
 @app.post("/api/next-hour")
