@@ -20,6 +20,8 @@ Our answer is to not hold everything. Terminal Planner isolates the one box it
 isn't sure about, protects the cargo that can't wait, follows every hold, and
 keeps the rest moving. Every decision comes with a reason you can read.
 
+![Terminal Planner dashboard](Screenshots/Dashboard.png)
+
 ## Dual use
 
 The same engine runs on a normal day and in a disaster. Day to day it cuts
@@ -35,6 +37,8 @@ it still won't make an illegal or unsafe move. You don't need a separate crisis 
 The operator flips the switch at the top of the dashboard. We deliberately
 didn't automate that part.
 
+ ![Priority queue in crisis mode](Screenshots/PriorityQueue.png)
+
 ### Twists
 
 There are four disruptions you can trigger with one click. The planner isn't told
@@ -46,6 +50,10 @@ anything special. It just re-plans from what the terminal looks like now.
 | Carrier system down or hacked | Carrier records can't be trusted | Ignores them and uses scale, customs and reefer data only |
 | Flood or earthquake | Several lanes close at once | Reroutes clean boxes to open lanes, delays what can wait |
 | Relief cargo surge | 8 medical/emergency boxes arrive | Small boost in daily mode, first out in crisis mode |
+
+![The four twists](Screenshots/Twists.png)
+
+![Hold all vs first come vs Terminal Planner](Screenshots/Comparison.png)
 
 ## Running it
 
