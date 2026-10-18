@@ -120,6 +120,25 @@ def problem_ticket(box, a, item):
     }
 
 
+# Pipeline stages in display order.
+PIPELINE = ["Discharged", "Docs pending", "Under review", "On hold", "Cleared", "Released"]
+
+
+def container_status(box, a):
+    """Derive the container's current pipeline stage from its live fields."""
+    if box["location"] == "released":
+        return "Released"
+    if a["holds"]:
+        return "On hold"
+    # All holds have been lifted (holds list in source is non-empty but none active).
+    src_holds = box["sources"]["customs"]["holds"]
+    if src_holds and not a["holds"]:
+        return "Cleared"
+    if box.get("inspecting") or box.get("weight_checked"):
+        return "Under review"
+    return "Discharged"
+
+
 def queue_row(item, clock):
     box, a = item["box"], item["a"]
     flags = []
@@ -143,6 +162,7 @@ def queue_row(item, clock):
         "actions": item["actions"], "problem": box.get("problem", False),
         "critical": CRITICAL.get(box.get("critical")),
         "model": item.get("model"),
+        "status": container_status(box, a),
     }
 
 
@@ -200,6 +220,8 @@ def get_state():
             "actions": problem["actions"],
             "ticket": problem_ticket(box, a, problem),
             "model": problem["model"],
+            "status": container_status(box, a),
+            "pipeline": PIPELINE,
         }
     return jsonify(payload)
 

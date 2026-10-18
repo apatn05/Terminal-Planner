@@ -327,3 +327,41 @@ footer { max-width: 1480px; margin: 0 auto; padding: 8px 24px 28px; color: var(-
 .model-tag { font: 11px var(--mono); margin-top: 4px; color: var(--violet); }
 .model-tag.override { color: var(--red); }
 .model-tag.differs { color: var(--amber); }
+
+/* Status badges (queue table) */
+.status-badge {
+  display: inline-block; font: 600 10px var(--mono); letter-spacing: .04em;
+  padding: 3px 7px; border-radius: 4px; border: 1px solid; white-space: nowrap;
+}
+.status-badge.discharged { color: var(--muted);  border-color: var(--line-2);  background: transparent; }
+.status-badge.docs       { color: var(--blue);   border-color: #23406b;        background: #0e1828; }
+.status-badge.review     { color: var(--violet); border-color: #463a73;        background: #17132a; }
+.status-badge.onhold     { color: var(--red);    border-color: #6b2a2a;        background: #211112; }
+.status-badge.cleared    { color: var(--amber);  border-color: #6b5316;        background: #1f190b; }
+.status-badge.released   { color: var(--green);  border-color: #1d5c47;        background: #0c1d17; }
+
+/* 6-step pipeline progress bar (problem box panel) */
+.pipeline {
+  display: flex; align-items: center;
+  padding: 14px 2px 16px; margin-bottom: 4px;
+}
+.pipe-step {
+  display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 0 0 auto;
+}
+.pipe-dot {
+  width: 12px; height: 12px; border-radius: 50%;
+  border: 2px solid var(--line-2); background: var(--panel-2);
+  transition: background .2s, border-color .2s;
+}
+.pipe-step.done  .pipe-dot { background: var(--cyan);  border-color: var(--cyan); }
+.pipe-step.active .pipe-dot { background: var(--amber); border-color: var(--amber); box-shadow: 0 0 0 3px #3a2f0e; }
+.pipe-label {
+  font: 500 11px var(--mono); color: var(--dim); white-space: nowrap;
+}
+.pipe-step.done  .pipe-label { color: var(--muted); }
+.pipe-step.active .pipe-label { color: var(--amber); font-weight: 600; }
+.pipe-connector {
+  flex: 1 1 0; height: 2px; background: var(--line-2); min-width: 16px; margin-bottom: 18px;
+}
+.pipe-connector:has(+ .pipe-step.done),
+.pipe-connector:has(+ .pipe-step.active) { background: var(--cyan); }

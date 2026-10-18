@@ -1,6 +1,16 @@
 // Terminal Planner dashboard. Everything on screen comes from the Python API;
 // this file only draws it and sends button clicks back.
 
+// Status pipeline: label → CSS modifier class.
+const STATUS_CLASS = {
+  "Discharged":   "discharged",
+  "Docs pending": "docs",
+  "Under review": "review",
+  "On hold":      "onhold",
+  "Cleared":      "cleared",
+  "Released":     "released",
+};
+
 // What colour each action gets, grouped by the kind of work it is.
 const TAG_KIND = {
   POWER: "cold", COLD_STORE: "cold", WAIT_COOL: "wait", ESCALATE: "hold",
@@ -161,6 +171,14 @@ function renderProblem(p) {
     countdown.innerHTML = `<div class="label">Temperature</div><div class="value">Cooling</div>`;
   }
 
+  // 6-step pipeline progress bar
+  const pipeline = p.pipeline || ["Discharged","Docs pending","Under review","On hold","Cleared","Released"];
+  const activeIdx = pipeline.indexOf(p.status);
+  document.getElementById("pb-pipeline").innerHTML = pipeline.map((step, i) => {
+    const cls = i < activeIdx ? "done" : i === activeIdx ? "active" : "";
+    return `<div class="pipe-step ${cls}"><div class="pipe-dot"></div><div class="pipe-label">${esc(step)}</div></div>`;
+  }).join('<div class="pipe-connector"></div>');
+
   document.getElementById("pb-sources").innerHTML = p.sources.map((src) => `
     <div class="source ${src.conflict ? "conflict" : ""} ${src.untrusted ? "untrusted" : ""}">
       <div class="source-top">
@@ -283,6 +301,7 @@ function renderQueue() {
     else if (row.free_h < 24) free = `<span class="t-amber mono">${Math.round(row.free_h)} h</span>`;
     else free = `<span class="mono">${Math.round(row.free_h)} h</span>`;
 
+    const statusCls = STATUS_CLASS[row.status] || "discharged";
     const why = row.reasons.length ? row.reasons.join(" · ") : main.why;
     return `<tr class="${row.problem ? "problem" : ""}">
       <td class="num">${row.rank}</td>
@@ -291,10 +310,11 @@ function renderQueue() {
       <td>${esc(row.cargo)}${row.cargo_guessed ? '<div class="sub">guessed from set point</div>' : ""}${row.critical && row.critical !== row.cargo ? `<div class="sub">${esc(row.critical)}</div>` : ""}</td>
       <td class="nowrap">${spoils}</td>
       <td class="nowrap">${free}</td>
+      <td class="nowrap"><span class="status-badge ${statusCls}">${esc(row.status)}</span></td>
       <td>${tag(main.type)}<div class="sub">${esc(main.text)}</div>${extra}${modelTag(row.model)}</td>
       <td class="why">${esc(why)}</td>
     </tr>`;
-  }).join("") || `<tr><td colspan="8" class="empty">Nothing matches this filter.</td></tr>`;
+  }).join("") || `<tr><td colspan="9" class="empty">Nothing matches this filter.</td></tr>`;
 }
 
 function modelTag(m) {
