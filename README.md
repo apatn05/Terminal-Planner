@@ -169,8 +169,7 @@ from past container decisions (100 rows in `dataset1.csv`, 120 in `dataset2.csv`
 whether the carrier says empty, weight, customs hold, how far off the temperature
 is, whether the gate is open, and hours waited. It predicts an action and a risk level.
 
-- **Accuracy:** 95% on unseen rows (5-fold cross-validation). Run
-  `python train_model.py` to see it along with the rules it learned.
+- **Accuracy:** 95% on unseen rows (5-fold cross-validation) with both datasets.
 - **It only suggests.** Every suggestion gets checked against the planner:
   agrees ✓, overridden by a rule ✗ (say it wants to release but there's a customs
   hold), or differs ≠ (say the planner can see a reefer lost power, which isn't
@@ -178,6 +177,47 @@ is, whether the gate is open, and hours waited. It predicts an action and a risk
 - **Limitation:** the dataset records decisions, not outcomes. So the model learns
   what people chose, not what actually worked best. With a terminal's real
   incident history it could learn from outcomes instead.
+
+### Training on a dataset
+
+The datasets live in `data/`. There are two right now: `dataset1.csv` (100 rows)
+and `dataset2.csv` (120 rows, different experts and action names).
+
+1. Stop the app if it's running (Ctrl+C).
+2. Train on the dataset you want:
+   ```bash
+   python train_model.py dataset2.csv
+   ```
+   This copies it to `data/container_history.csv` (the one the app reads) and
+   prints how many rows it trained on, the accuracy, and the rules the tree learned.
+3. Start the app again with `python backend/app.py` and refresh the browser. The
+   purple "Model suggests" boxes now come from the new data.
+
+To switch back, run `python train_model.py dataset1.csv` and restart the app.
+Running `python train_model.py` with no name just retrains on the dataset that's
+already loaded.
+
+You may see a sklearn `UserWarning` saying a class has fewer than 5 members. That
+just means one action is rare in the data, so it can't appear in all 5 test splits.
+It's safe to ignore.
+
+**Using your own dataset:** put the CSV in `data/` and pass its name the same way.
+It needs these columns (extra columns are ignored):
+
+| Column | Values |
+|---|---|
+| `Container Type` | `Refrigerated` or anything else (counts as dry) |
+| `Carrier Report` | `Empty` or anything else |
+| `Actual Weight (kg)` | number |
+| `Customs Status` | `Hold` or anything else |
+| `Current Temperature (°C)`, `Required Temperature (°C)` | numbers, blank for dry boxes |
+| `Gate Status` | `Open` or anything else |
+| `Waiting Time (hours)` | number |
+| `Recommended Action` | what the model learns to suggest |
+| `Risk Level` | what the model learns to rate |
+
+If your actions use new names, add them to `AGREES_WITH` in `backend/model.py` so
+the app can tell when the model agrees with the planner.
 
 ## What's real vs simulated
 
